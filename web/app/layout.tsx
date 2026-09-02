@@ -44,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Link href="/">Overview</Link>
           <Link href="/evidence">Evidence</Link>
           <Link href="/track">Track</Link>
+          <Link href="/send">Send</Link>
         </nav>
         {children}
         <footer className="shell" style={{ padding: "3rem var(--gutter) 4rem", borderTop: "1px solid var(--line)" }}>

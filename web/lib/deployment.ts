@@ -4,11 +4,24 @@ export const DEPLOYMENT = {
     name: "Ethereum Sepolia",
     chainKey: 1,
     chainId: 11155111,
+    action: 1,
     rpc: "https://ethereum-sepolia-rpc.publicnode.com",
     explorer: "https://sepolia.etherscan.io",
     gateway: "0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053",
     usdc: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
     treasury: "0x86CF30f751e0138A3272e3A148eF59Fd77C7366F",
+  },
+  /** Second source: Ethereum mainnet, chainKey 3. Same ASC, action 2. Filled in by deploy_mainnet.sh. */
+  mainnet: {
+    name: "Ethereum",
+    chainKey: 3,
+    chainId: 1,
+    action: 2,
+    rpc: "https://ethereum-rpc.publicnode.com",
+    explorer: "https://eth.blockscout.com",
+    gateway: "",                                   // set after deployment
+    usdc: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    treasury: "",                                  // set after deployment
   },
   settlement: {
     name: "Creditcoin CC3 Testnet",

@@ -4,7 +4,8 @@
  * Takes a remittance transaction on a source chain, waits for Attestcoin to attest the block
  * it landed in, pulls the inclusion proof, and hands it to KirogiASC on Creditcoin.
  *
- *   npx tsx scripts/submit_proof.ts <sourceTxHash> [--action 1] [--fixture name]
+ *   npx tsx scripts/submit_proof.ts <sourceTxHash> [--action 1] [--chain-key 1] [--fixture name]
+ *   (Ethereum mainnet: --action 2 --chain-key 3 — reads MAINNET_RPC)
  *   npx tsx scripts/submit_proof.ts --chains        # list what Attestcoin can read today
  *
  * `--fixture` caches the proof to fixtures/<name>.json. Tests replay those offline, which keeps
@@ -71,7 +72,8 @@ async function main() {
     throw new Error("usage: submit_proof.ts <sourceTxHash> [--action N] [--fixture name]");
   }
   const action = Number(argOf("--action") ?? 1);
-  const chainKey = Number(env("CHAIN_KEY_SEPOLIA", "1"));
+  const chainKey = Number(argOf("--chain-key") ?? env("CHAIN_KEY_SEPOLIA", "1"));
+  const sourceRpc = chainKey === 3 ? env("MAINNET_RPC", "https://ethereum-rpc.publicnode.com") : SEPOLIA_RPC;
   const fixtureName = argOf("--fixture");
 
   // 1. Confirm the source chain is actually enabled before spending anything.
@@ -85,7 +87,7 @@ async function main() {
   }
 
   // 2. Find the block the remittance landed in.
-  const source = new JsonRpcProvider(SEPOLIA_RPC);
+  const source = new JsonRpcProvider(sourceRpc);
   const tx = await source.getTransaction(txHash);
   if (!tx?.blockNumber) throw new Error(`source tx not mined yet: ${txHash}`);
   console.log(`source tx in block ${tx.blockNumber}`);
