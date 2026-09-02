@@ -13,7 +13,7 @@ const SHOTS = [
   ['10-source',   'https://eth-sepolia.blockscout.com/tx/0x0a31dd52776f8d656cc5be3178a367f8283584e2cd7396038880dfb0b2c02e2b', 6000],
   ['11-settle',   'https://creditcoin-testnet.blockscout.com/tx/0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307', 6000],
   ['12-school',   'https://creditcoin-testnet.blockscout.com/address/0x92E8B717f444c1AB0e8fa9439c5AFbB556Dfa51b?tab=tokens', 7000],
-  ['13-evidence', 'http://localhost:3100/evidence', 5000],
+  ['13-evidence', 'http://127.0.0.1:8788/kirogi/app/evidence/', 7000],   // docs/ served as Pages would
 ];
 
 const chrome = spawn(CHROME, [

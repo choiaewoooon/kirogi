@@ -30,7 +30,7 @@ body.shot{height:1080px;box-sizing:border-box;overflow:hidden;padding:88px 120px
 SHOTS = [
     ("10-source",   "Ethereum Sepolia",     "eth-sepolia.blockscout.com &middot; the deposit"),
     ("11-settle",   "Creditcoin CC3",       "creditcoin-testnet.blockscout.com &middot; the settlement"),
-    ("12-school",   "The school&rsquo;s wallet", "12 KSU received &middot; not the parent&rsquo;s, not ours"),
+    ("12-school",   "The school&rsquo;s wallet", "18 KSU across seven settlements &middot; not the parent&rsquo;s, not ours"),
     ("13-evidence", "Live contract state",  "read straight from both chains"),
 ]
 
