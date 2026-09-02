@@ -12,6 +12,9 @@ import {INativeQueryVerifier} from "../contracts/vendor/VerifierInterface.sol";
 ///      One succeeded on Ethereum, one reverted. Both were also submitted against the live
 ///      Creditcoin deployment; these tests are the offline mirror of that, so the whole
 ///      rejection surface can be re-checked in milliseconds instead of ~8 minutes per attempt.
+// bit n = purpose code n: 1 tuition · 2 dormitory · 3 books. Nothing else.
+uint32 constant SCHOOL_PURPOSES = (1 << 1) | (1 << 2) | (1 << 3);
+
 contract FullFlowTest is Test {
     address constant PRECOMPILE = 0x0000000000000000000000000000000000000FD2;
     uint8 constant ACTION = 1;
@@ -50,7 +53,7 @@ contract FullFlowTest is Test {
         pool.setAsc(address(asc));
         asc.setPool(pool);
         token.mint(address(pool), 1_000_000e6);
-        pool.registerSettlementPartner(beneficiaryId, partner);
+        pool.registerSettlementPartner(beneficiaryId, partner, SCHOOL_PURPOSES);
         asc.configureSource(ACTION, 1, gateway, usdc, treasury);
 
         vm.mockCall(
@@ -128,12 +131,24 @@ contract FullFlowTest is Test {
         _submit(f);
     }
 
+    /// The real Sepolia remittance was sent for purpose 1 (tuition). Register the school for
+    /// everything except tuition: the proof is valid, the source tx succeeded, and Creditcoin
+    /// still refuses — because what the money was sent *for* is not what the receiver takes.
+    function test_RefusesProvenRemittanceForDisallowedPurpose() public {
+        pool.registerSettlementPartner(beneficiaryId, partner, (1 << 2) | (1 << 3));
+        Fixture memory f = _load("full-flow-success");
+        vm.expectRevert(abi.encodeWithSelector(SettlementPool.PurposeNotAllowed.selector, beneficiaryId, uint16(1)));
+        _submit(f);
+        assertEq(token.balanceOf(partner), 0);
+        assertEq(pool.settlementCountOf(beneficiaryId), 0);
+    }
+
     /// The gateway log carries the beneficiary. A proof for someone else's remittance cannot
     /// be redirected by registering a different partner.
     function test_PaysOnlyTheBeneficiaryNamedInTheProof() public {
         bytes32 other = keccak256("someone-else");
         address otherPartner = address(0xC0FFEE);
-        pool.registerSettlementPartner(other, otherPartner);
+        pool.registerSettlementPartner(other, otherPartner, SCHOOL_PURPOSES);
 
         Fixture memory f = _load("full-flow-success");
         _submit(f);

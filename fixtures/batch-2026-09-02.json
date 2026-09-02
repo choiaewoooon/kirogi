@@ -1,0 +1,76 @@
+{
+  "chainKey": 1,
+  "beneficiary": "0x5a1584d7faba43a9baca8c071d9ba2a56db2b16d07eacdf97f5577f764cb25d5",
+  "rows": [
+    {
+      "kind": "ok",
+      "hash": "0xa40711ceb30249e82e0aec05bc0a378dcd35001c2d828255a38616e15e4a4256",
+      "block": 11619884,
+      "amount": "1000000",
+      "purpose": 1
+    },
+    {
+      "kind": "ok",
+      "hash": "0xdf214d21dc69c0aaa4079e4416b4a3979656cad4fdf95c5c2691d463610afbe7",
+      "block": 11619885,
+      "amount": "1000000",
+      "purpose": 2
+    },
+    {
+      "kind": "ok",
+      "hash": "0xc0959f865178aa5e7bdaab101bb60e2b55795181d2ca0e6e60c328ff70e1d8fa",
+      "block": 11619886,
+      "amount": "1000000",
+      "purpose": 3
+    },
+    {
+      "kind": "ok",
+      "hash": "0xae47c57ec4f0ce4c9c4e327eda807d9f6b52890aae2ccedd749f96b1a59365ff",
+      "block": 11619888,
+      "amount": "1000000",
+      "purpose": 4
+    },
+    {
+      "kind": "ok",
+      "hash": "0xac318ba718651bec4fc128ebcdda02e54cb35c085e7923fc047635748a966631",
+      "block": 11619889,
+      "amount": "1000000",
+      "purpose": 1
+    },
+    {
+      "kind": "ok",
+      "hash": "0x370a82a12655ae5ebd78a4c0e624a46a268fabcca872e80eae165454847a6730",
+      "block": 11619891,
+      "amount": "1000000",
+      "purpose": 2
+    },
+    {
+      "kind": "ok",
+      "hash": "0xe2f6838d386158bb76ebf3b66b8c5f43fafacb352da55aca956d4b2ebd4518ff",
+      "block": 11619893,
+      "amount": "1000000",
+      "purpose": 3
+    },
+    {
+      "kind": "fail",
+      "hash": "0xf1b9e4f8b09a33411ddd5c2c690bb59988706699ec2410a33edd069f727d0e5a",
+      "block": 11619894,
+      "amount": "1008000000",
+      "purpose": 1
+    },
+    {
+      "kind": "fail",
+      "hash": "0x2e675a908dc6b1f8e48c7b402579c3846445578424ff783cfd3bde14b282e449",
+      "block": 11619895,
+      "amount": "1008000000",
+      "purpose": 2
+    },
+    {
+      "kind": "fail",
+      "hash": "0x37ec2d3cf4293f8b0bb1dc26921e4d5f79f18c48a58fdd29c031e20894890ab8",
+      "block": 11619896,
+      "amount": "1008000000",
+      "purpose": 3
+    }
+  ]
+}

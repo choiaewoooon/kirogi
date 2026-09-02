@@ -11,9 +11,9 @@
 import { JsonRpcProvider, type TransactionReceipt } from "ethers";
 
 export const SOURCE_RPCS = [
-  "https://1rpc.io/sepolia",
   "https://sepolia.gateway.tenderly.co",
   "https://ethereum-sepolia-rpc.publicnode.com",
+  "https://1rpc.io/sepolia",            // fine for receipts; refused eth_getBalance on the free tier
 ] as const;
 
 export const SETTLEMENT_RPCS = ["https://rpc.cc3-testnet.creditcoin.network"] as const;

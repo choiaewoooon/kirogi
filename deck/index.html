@@ -93,7 +93,7 @@
 <!-- 5 the five checks -->
 <section class="slide">
   <p class="eyebrow">Depth of Attestcoin use</p>
-  <h1 class="h-lg" style="max-width:24ch">Five things must be true inside one receipt.</h1>
+  <h1 class="h-lg" style="max-width:24ch">Six things must be true before anyone is paid.</h1>
   <table style="margin-top:38px">
     <tr><th style="width:30%">Check</th><th style="width:44%">Why it exists</th><th>Reads</th></tr>
     <tr><td><b>Inclusion</b></td><td>Merkle proof plus a continuity chain back to an on-chain attestation</td><td class="mono">precompile 0x0FD2</td></tr>
@@ -101,10 +101,12 @@
     <tr><td><b>Canonical token</b></td><td>Sepolia hosts more than one contract answering to the name USDC</td><td class="mono">log address</td></tr>
     <tr><td><b>Destination</b></td><td>The tokens must have landed in the registered treasury, from the claimed sender, for the claimed amount</td><td class="mono">topics + data</td></tr>
     <tr><td><b>Single use</b></td><td>A proof is a bearer object. Presenting it twice must not pay twice</td><td class="mono">chain·height·index</td></tr>
+    <tr><td><b>Purpose</b></td><td>What the money was sent <b>for</b> must be something the receiver is registered to take. A school is not paid for an exam fee it does not charge</td><td class="mono">allowedPurposesOf</td></tr>
   </table>
   <p class="lede" style="margin-top:34px;font-size:19px">
     The load-bearing one is the canonical token log. <b>An admin key can sign a payment that never
-    happened; a USDC log cannot exist unless USDC actually moved.</b>
+    happened; a USDC log cannot exist unless USDC actually moved.</b> The sixth is where the
+    sender's intent stops being a label and becomes a condition of payment.
   </p>
   <p class="pageno">05</p>
 </section>
@@ -141,10 +143,13 @@
     <tr><td><b>Point the config at a look-alike USDC</b><br><span class="small">A second Sepolia contract reads name, symbol and decimals as USDC.</span></td>
         <td><span class="tag no">NoCanonicalTransfer()</span></td><td><span class="tag">test suite</span></td></tr>
     <tr><td><b>Redirect a proof to a different partner</b></td><td><span class="tag no">unrelated partner receives 0</span></td><td><span class="tag">test suite</span></td></tr>
+    <tr><td><b>Prove a <i>successful</i> remittance sent for a purpose the school does not take</b><br><span class="small">Valid proof, status 1, wrong purpose. The receiver's registration decides.</span></td>
+        <td><span class="tag no">PurposeNotAllowed()</span></td><td><span class="tag" id="purpose-where">test suite</span></td></tr>
   </table>
   <p class="lede" style="margin-top:32px">
-    <b>20 tests pass.</b> The first row happened on the live network: a real reverted Sepolia
-    transaction, a real valid proof, refused by Creditcoin.
+    <b>24 tests pass, and the same proofs run unmocked through the real precompile by
+    <span class="mono">eth_call</span>.</b> The first row happened on the live network: a real
+    reverted Sepolia transaction, a real valid proof, refused by Creditcoin.
   </p>
   <p class="pageno">07</p>
 </section>
@@ -219,7 +224,7 @@
   <p class="eyebrow">Next</p>
   <h1 class="h-lg" style="max-width:20ch">From one corridor to a credit layer.</h1>
   <div class="grid3" style="margin-top:44px">
-    <div class="card"><h3>Now — testnet</h3><p>Proven deposit settles to a registered partner. Contracts live on Sepolia and CC3, 20 tests, public evidence page.</p></div>
+    <div class="card"><h3>Now — testnet</h3><p>Proven deposit settles to a registered partner, for a registered purpose. Contracts live on Sepolia and CC3, 24 tests, public evidence page and tracker.</p></div>
     <div class="card"><h3>Next — the record</h3><p>Every settled remittance is a repayment-shaped event. Turn the ledger into a credit history the partners can lend against.</p></div>
     <div class="card"><h3>Then — default events</h3><p>Machine-decidable credit events proven the same way, so the record has two sides instead of one.</p></div>
   </div>

@@ -9,6 +9,9 @@ import {SettlementPool} from "../contracts/SettlementPool.sol";
 import {RemittanceGateway} from "../contracts/RemittanceGateway.sol";
 import {INativeQueryVerifier} from "../contracts/vendor/VerifierInterface.sol";
 
+// bit n = purpose code n: 1 tuition · 2 dormitory · 3 books. Nothing else.
+uint32 constant SCHOOL_PURPOSES = (1 << 1) | (1 << 2) | (1 << 3);
+
 contract TestToken is ERC20 {
     constructor() ERC20("Test USDC", "tUSDC") {}
     function mint(address to, uint256 amount) external { _mint(to, amount); }
@@ -156,13 +159,13 @@ contract SettlementPoolTest is Test {
     }
 
     function test_OnlyAscCanSettle() public {
-        pool.registerSettlementPartner(BENEFICIARY, school);
+        pool.registerSettlementPartner(BENEFICIARY, school, SCHOOL_PURPOSES);
         vm.expectRevert(SettlementPool.NotAsc.selector);
         pool.settle(BENEFICIARY, 1e6, 1, bytes32(0));
     }
 
     function test_SettlesToRegisteredPartner() public {
-        pool.registerSettlementPartner(BENEFICIARY, school);
+        pool.registerSettlementPartner(BENEFICIARY, school, SCHOOL_PURPOSES);
         vm.prank(asc);
         pool.settle(BENEFICIARY, 271e6, 1, keccak256("q"));
         assertEq(token.balanceOf(school), 271e6);
@@ -175,8 +178,34 @@ contract SettlementPoolTest is Test {
         pool.settle(BENEFICIARY, 1e6, 1, bytes32(0));
     }
 
+    /// A valid proof for a purpose the partner does not accept is refused. The sender's
+    /// intent is enforced where the money is paid out, not just recorded.
+    function test_RejectsPurposeNotAllowed() public {
+        pool.registerSettlementPartner(BENEFICIARY, school, SCHOOL_PURPOSES);
+        vm.prank(asc);
+        vm.expectRevert(abi.encodeWithSelector(SettlementPool.PurposeNotAllowed.selector, BENEFICIARY, uint16(4)));
+        pool.settle(BENEFICIARY, 1e6, 4, keccak256("exam-fee"));
+        assertEq(token.balanceOf(school), 0);
+    }
+
+    function test_PurposeCodesAbove31NeverAllowed() public {
+        pool.registerSettlementPartner(BENEFICIARY, school, type(uint32).max);
+        assertTrue(pool.purposeAllowed(BENEFICIARY, 31));
+        assertFalse(pool.purposeAllowed(BENEFICIARY, 32));
+    }
+
+    function test_CountsEverySettlement() public {
+        pool.registerSettlementPartner(BENEFICIARY, school, SCHOOL_PURPOSES);
+        vm.startPrank(asc);
+        pool.settle(BENEFICIARY, 5e6, 1, keccak256("q1"));
+        pool.settle(BENEFICIARY, 7e6, 2, keccak256("q2"));
+        vm.stopPrank();
+        assertEq(pool.settlementCountOf(BENEFICIARY), 2);
+        assertEq(pool.settledTotalOf(BENEFICIARY), 12e6);
+    }
+
     function test_RejectsWhenLiquidityShort() public {
-        pool.registerSettlementPartner(BENEFICIARY, school);
+        pool.registerSettlementPartner(BENEFICIARY, school, SCHOOL_PURPOSES);
         vm.prank(asc);
         vm.expectRevert(abi.encodeWithSelector(SettlementPool.InsufficientLiquidity.selector, 2_000e6, 1_000e6));
         pool.settle(BENEFICIARY, 2_000e6, 1, bytes32(0));

@@ -27,8 +27,17 @@ contract SettlementPool is Ownable {
     /// @notice Cumulative amount settled per beneficiary. Read by the frontend.
     mapping(bytes32 => uint256) public settledTotalOf;
 
+    /// @notice Number of settlements per beneficiary. With settledTotalOf this is the whole
+    ///         repayment record — the thing a lender would one day read. We only write it.
+    mapping(bytes32 => uint32) public settlementCountOf;
+
+    /// @notice beneficiaryId => bitmask of purpose codes the partner accepts (bit n = code n).
+    /// @dev This is the sender's intent made enforceable. A school registered for tuition,
+    ///      dormitory and books cannot be paid for anything else, however valid the proof is.
+    mapping(bytes32 => uint32) public allowedPurposesOf;
+
     event AscUpdated(address indexed asc);
-    event SettlementPartnerRegistered(bytes32 indexed beneficiaryId, address indexed partner);
+    event SettlementPartnerRegistered(bytes32 indexed beneficiaryId, address indexed partner, uint32 allowedPurposes);
     event Settled(
         bytes32 indexed beneficiaryId,
         address indexed partner,
@@ -40,6 +49,7 @@ contract SettlementPool is Ownable {
     error NotAsc();
     error NoSettlementPartner(bytes32 beneficiaryId);
     error InsufficientLiquidity(uint256 requested, uint256 available);
+    error PurposeNotAllowed(bytes32 beneficiaryId, uint16 purposeCode);
 
     modifier onlyAsc() {
         if (msg.sender != asc) revert NotAsc();
@@ -58,10 +68,21 @@ contract SettlementPool is Ownable {
 
     /// @dev Whitelisting settlement partners needs an operator. We do not pretend otherwise —
     ///      this is one of the trust assumptions stated openly in the submission.
-    function registerSettlementPartner(bytes32 beneficiaryId, address partner) external onlyOwner {
+    function registerSettlementPartner(bytes32 beneficiaryId, address partner, uint32 allowedPurposes)
+        external
+        onlyOwner
+    {
         require(beneficiaryId != bytes32(0) && partner != address(0), "zero arg");
+        require(allowedPurposes != 0, "no purposes");
         settlementAddressOf[beneficiaryId] = partner;
-        emit SettlementPartnerRegistered(beneficiaryId, partner);
+        allowedPurposesOf[beneficiaryId] = allowedPurposes;
+        emit SettlementPartnerRegistered(beneficiaryId, partner, allowedPurposes);
+    }
+
+    /// @notice Whether `purposeCode` is one the partner behind `beneficiaryId` accepts.
+    function purposeAllowed(bytes32 beneficiaryId, uint16 purposeCode) public view returns (bool) {
+        if (purposeCode >= 32) return false;
+        return allowedPurposesOf[beneficiaryId] & (uint32(1) << purposeCode) != 0;
     }
 
     /// @notice Pay the registered partner. Only reachable behind a verified Attestcoin proof.
@@ -71,11 +92,15 @@ contract SettlementPool is Ownable {
     {
         address partner = settlementAddressOf[beneficiaryId];
         if (partner == address(0)) revert NoSettlementPartner(beneficiaryId);
+        // The proof says the money was sent. This says what it was sent *for* is what the
+        // receiver is registered to accept. Both have to hold.
+        if (!purposeAllowed(beneficiaryId, purposeCode)) revert PurposeNotAllowed(beneficiaryId, purposeCode);
 
         uint256 available = PAYOUT_TOKEN.balanceOf(address(this));
         if (amount > available) revert InsufficientLiquidity(amount, available);
 
         settledTotalOf[beneficiaryId] += amount;
+        settlementCountOf[beneficiaryId] += 1;
         PAYOUT_TOKEN.safeTransfer(partner, amount);
 
         emit Settled(beneficiaryId, partner, amount, purposeCode, queryId);

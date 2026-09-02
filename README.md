@@ -45,7 +45,7 @@ The Attestcoin Protocol lets a Creditcoin contract read the Ethereum transaction
                           │    ② our RemittanceSent         │
                           │                                 │
                           └── Attestcoin readability ──▶ KirogiASC
-                                   (~7m30s)              five checks
+                                   (~7m30s)              six checks
                                                               │
                                                               ▼
                                                     school is paid, in real tokens
@@ -54,7 +54,11 @@ The Attestcoin Protocol lets a Creditcoin contract read the Ethereum transaction
 **Value never crosses.** The liquidity provider keeps inventory on both chains and nets off-chain,
 exactly as remittance corridors already work. Only the fact crosses.
 
-## The five checks
+**And nothing else is needed.** No lockout hardware on the receiving end, no merchant integration,
+no solver network: a school registers one wallet and the purposes it accepts, and it is live.
+That is the thinnest real-world deployment this protocol allows, and it is deliberate.
+
+## The six checks
 
 `KirogiASC._processAndEmitEvent` refuses to pay unless all of these hold inside one receipt:
 
@@ -65,10 +69,15 @@ exactly as remittance corridors already work. Only the fact crosses.
 | 3 | **Canonical token** | Sepolia hosts more than one contract answering to the name USDC. The address is pinned to Circle's. |
 | 4 | **Destination** | The `Transfer` recipient must equal the registered treasury, and its sender and amount must match the gateway's own event. |
 | 5 | **Single use** | A query id keyed on `chainKey · blockHeight · txIndex` is burned on first use. |
+| 6 | **Purpose** | The gateway log says what the money was sent *for*. The pool holds, per beneficiary, the purposes the receiver accepts. A school registered for tuition, dormitory and books is not paid for anything else — however valid the proof. |
 
 The load-bearing one is #3 and #4 together. **An admin key can sign a payment that never happened;
 a canonical USDC log cannot exist unless USDC actually moved.** Our own event only carries
-self-reported metadata — who the money is for, and what the sender says it is for.
+self-reported metadata — who the money is for, and what the sender says it is for. Check #6 is
+where that metadata stops being a label: the receiver's registration decides whether the stated
+purpose is one they take, and the settlement fails if it is not. **The sender's intent is enforced
+at the point the money is paid out**, which is the whole reason a parent working abroad would use
+this instead of a wire.
 
 <a id="it-ran"></a>
 ## It ran
@@ -93,14 +102,15 @@ Verification cost **0.000664 CTC**.
 | Treasury (provider inventory) | Sepolia | [`0x86CF30f751e0138A3272e3A148eF59Fd77C7366F`](https://sepolia.etherscan.io/address/0x86CF30f751e0138A3272e3A148eF59Fd77C7366F) |
 | Circle USDC | Sepolia | [`0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`](https://sepolia.etherscan.io/address/0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238) |
 | **`KirogiASC`** | Creditcoin CC3 | [`0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45`](https://creditcoin-testnet.blockscout.com/address/0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45) |
-| `SettlementPool` | Creditcoin CC3 | [`0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98`](https://creditcoin-testnet.blockscout.com/address/0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98) |
+| `SettlementPool` v2 (purpose enforcement) | Creditcoin CC3 | [`0xC471E417383C01c0053F79660224428Edd37e8e3`](https://creditcoin-testnet.blockscout.com/address/0xC471E417383C01c0053F79660224428Edd37e8e3) |
+| `SettlementPool` v1 (first settlement, drained) | Creditcoin CC3 | [`0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98`](https://creditcoin-testnet.blockscout.com/address/0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98) |
 | `SettlementToken` (KSU) | Creditcoin CC3 | [`0xA57eEa3D273d8558F428602fa1ac66cE0b93a441`](https://creditcoin-testnet.blockscout.com/address/0xA57eEa3D273d8558F428602fa1ac66cE0b93a441) |
 | `EvmV1Decoder` (library) | Creditcoin CC3 | `0x5C9758B5eC179b177d3DC312888a051b7Fc037D6` |
 
 <a id="what-it-refuses"></a>
 ## What it refuses
 
-`forge test` — **20 passing**.
+`forge test` — **24 passing**. Then the same proofs, unmocked, against the real precompile.
 
 | Attempt | Result | Where |
 |---|---|---|
@@ -110,6 +120,7 @@ Verification cost **0.000664 CTC**.
 | Send the canonical token somewhere other than the treasury | `NoCanonicalTransfer()` | `test/Kirogi.t.sol` |
 | Present a proof the verifier rejects | `Proof of inclusion verification failed` | `test/Kirogi.t.sol` |
 | Redirect a proof to a different settlement partner | unrelated partner receives 0 | `test/FullFlow.t.sol` |
+| Prove a *successful* remittance sent for a purpose the school does not accept | `PurposeNotAllowed(beneficiary, 1)` | `test/FullFlow.t.sol` — real proof, real receipt |
 
 The first row is not a unit test. A real Sepolia remittance was made to revert, a real valid proof
 of it was submitted to the live contract, and Creditcoin returned `0xc60cdba1`.
@@ -118,16 +129,40 @@ Tests replay **real captured proofs** rather than fixtures we invented — `fixt
 actual `txBytes`, merkle and continuity proofs pulled from the prover. That keeps the ~7 minute
 attestation wait out of the edit/test loop entirely.
 
+### Nothing mocked: the real precompile, for free
+
+`forge` cannot execute Creditcoin's BlockProver — its EVM only ships the standard precompiles, so
+`0x0FD2` is an empty account there, and the unit tests have to mock it. That is a limit of the
+tool, not of the verification. `eth_call` on a Creditcoin node runs the genuine verifier and
+every check after it, and returns the exact revert the chain would produce, without spending gas:
+
+```
+$ npx tsx scripts/live_check.ts fixtures/full-flow-success.json fixtures/full-flow-failed.json
+eth_call → KirogiASC 0x4Ea7D8d6…cFcD45 on Creditcoin CC3 (real BlockProver at 0x0FD2)
+
+fixtures/full-flow-success.json    REJECT Error(Query already processed)     (fresh proof, 44 roots)
+fixtures/full-flow-failed.json     REJECT SourceTransactionFailed()  [0xc60cdba1]  (fresh proof, 47 roots)
+```
+
+The first line is the replay guard, live: that proof already paid once. The second is the status
+check, live. Both went through the real precompile. Note *fresh proof* — a cached proof stops
+matching once the attestation frontier crosses a checkpoint (`Continuity proof does not match
+attestation or checkpoint`), so the worker never reuses one; it rebuilds at settlement time.
+
 ## Run it
 
 ```bash
 npm install
 forge build
-forge test          # 20 passing, no network needed
+forge test          # 24 passing, no network needed
 ```
 
 Tests need no RPC, no faucet and no wallet: they mock the `0x0FD2` precompile with
-`vm.mockCall` and replay the captured proofs.
+`vm.mockCall` and replay the captured proofs. To run the same proofs through the real precompile:
+
+```bash
+npx tsx scripts/live_check.ts fixtures/*.json     # eth_call on CC3, gas-free, nothing mocked
+```
 
 ### Reproduce the live path
 
@@ -147,22 +182,33 @@ npx tsx scripts/submit_proof.ts <sepoliaTxHash> --action 1 --fixture my-proof
 The worker waits for attestation, pulls the proof, and submits it to `KirogiASC`. `--fixture`
 caches the proof so later runs are instant.
 
+```bash
+npx tsx scripts/remit.ts --ok 7 --fail 3            # a batch on Sepolia, some meant to revert
+npx tsx scripts/settle_batch.ts fixtures/batch.json # wait once, dry-run each, broadcast each
+./scripts/deploy_pool_v2.sh                         # swap the pool behind the same ASC
+```
+
 ### Layout
 
 ```
 contracts/
   RemittanceGateway.sol   Sepolia. Ownerless, immutable, pulls canonical USDC.
-  KirogiASC.sol           Creditcoin. Extends ASCBase, runs the five checks.
-  SettlementPool.sol      Creditcoin. Pre-funded liquidity, whitelisted partners.
+  KirogiASC.sol           Creditcoin. Extends ASCBase, runs checks 1-5.
+  SettlementPool.sol      Creditcoin. Pre-funded liquidity, whitelisted partners, check 6 (purpose).
   SettlementToken.sol     Demo stand-in for the local settlement asset.
   vendor/                 Official ASCBase + VerifierInterface, unmodified.
 scripts/
   submit_proof.ts         Attestation wait → proof → execute.
   fetch_fixture.mjs       Capture a real proof without deploying anything.
   deploy_cc3.sh           Re-runnable Creditcoin deploy.
-test/                     20 tests, real proof fixtures.
-web/                      Next.js. Overview, live evidence page, proof tracker.
+  deploy_pool_v2.sh       Pool swap behind the existing ASC.
+  live_check.ts           eth_call the real precompile. Nothing mocked, nothing spent.
+  remit.ts                Batch remittances on Sepolia, including ones meant to fail.
+  settle_batch.ts         Attest once, dry-run each, broadcast each — refusals included.
+test/                     24 tests, real proof fixtures.
+web/                      Next.js. Overview, live evidence page, proof tracker (with purpose check).
 deck/                     Slides, and the Chrome-headless build that makes the PDF.
+docs/                     GitHub Pages: demo video, deck, the exported site under /app.
 ```
 
 ## Source chains

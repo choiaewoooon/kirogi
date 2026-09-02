@@ -1,6 +1,7 @@
 import { Crossing } from "./Crossing";
 import { ReceiptAnatomy, Timeline, PreFunding } from "./Diagrams";
 import { DEPLOYMENT as D } from "@/lib/deployment";
+import Link from "next/link";
 
 const CHECKS = [
   {
@@ -49,12 +50,12 @@ export default function Home() {
             to say the deposit happened.
           </p>
           <div className="hero__actions">
-            <a className="btn btn--primary" href="/evidence">
+            <Link className="btn btn--primary" href="/evidence">
               See the transactions
-            </a>
-            <a className="btn btn--ghost" href="/track">
+            </Link>
+            <Link className="btn btn--ghost" href="/track">
               Track a deposit
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -78,9 +79,9 @@ export default function Home() {
           Two of these were proven the hard way: a remittance that reverted on Ethereum was
           submitted with a valid proof and rejected on-chain, and the same good proof was replayed
           and refused.{" "}
-          <a href="/evidence" className="hash">
+          <Link href="/evidence" className="hash">
             Open the evidence
-          </a>
+          </Link>
           .
         </p>
       </section>

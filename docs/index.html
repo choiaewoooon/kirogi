@@ -29,11 +29,14 @@ footer{margin-top:64px;color:var(--faint);font-size:13px;font-family:"JetBrains 
 <img class="mark" src="kirogi-mark.png" alt="">
 <h1>The money never crossed.<br>The proof did.</h1>
 <p class="lede">A remittance proven on Ethereum, settled to a school on Creditcoin through the
-Attestcoin Protocol. No bridge. Nobody trusted to say the money arrived.</p>
+Attestcoin Protocol — for the purpose it was sent for, and nothing else. No bridge. Nobody trusted
+to say the money arrived. No hardware, no merchant integration: one registered wallet.</p>
 
 <video controls playsinline preload="metadata" src="Kirogi-demo.mp4"></video>
 
 <div class="links">
+  <a href="app/track/"><small>Live app</small>Paste a Sepolia hash, watch it become provable</a>
+  <a href="app/evidence/"><small>Live state</small>Balances and settlements, read from both chains</a>
   <a href="Kirogi-deck.pdf"><small>Deck · PDF</small>12 slides, 0.7 MB</a>
   <a href="deck/"><small>Deck · in browser</small>Same slides, rendered live</a>
   <a href="https://github.com/choiaewoooon/kirogi"><small>Source</small>Contracts, tests, worker, site</a>
@@ -46,7 +49,8 @@ Attestcoin Protocol. No bridge. Nobody trusted to say the money arrived.</p>
 <tr><td>Settlement on Creditcoin</td><td><a href="https://creditcoin-testnet.blockscout.com/tx/0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307">0x9c0857ec…550307</a> — 12 KSU to the school, <span class="ok">success</span></td></tr>
 <tr><td>A reverted deposit, refused</td><td><a href="https://eth-sepolia.blockscout.com/tx/0xb17c17de63ce94d14534aa610212f41f6fc6f54ec01f06fa3e976c67482606e0">0xb17c17de…2606e0</a> — proof valid, tx included, status 0 → <span class="no">SourceTransactionFailed()</span></td></tr>
 <tr><td>KirogiASC (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45">0x4Ea7D8d6…cFcD45</a></td></tr>
-<tr><td>SettlementPool (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98">0x3F6d4A40…2F2A98</a></td></tr>
+<tr><td>SettlementPool v2 (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0xC471E417383C01c0053F79660224428Edd37e8e3">0xC471E417…37e8e3</a> — purpose enforcement, settlement count</td></tr>
+<tr><td>SettlementPool v1 (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98">0x3F6d4A40…2F2A98</a> — the first settlement; drained</td></tr>
 <tr><td>RemittanceGateway (Sepolia)</td><td><a href="https://eth-sepolia.blockscout.com/address/0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053">0x1C2152e3…9Ab053</a></td></tr>
 </table>
 <footer>BUIDL CTC 2026 Fall · Attestcoin Protocol · Creditcoin CC3 testnet</footer>

@@ -16,7 +16,7 @@ export const DEPLOYMENT = {
     rpc: "https://rpc.cc3-testnet.creditcoin.network",
     explorer: "https://creditcoin-testnet.blockscout.com",
     asc: "0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45",
-    pool: "0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98",
+    pool: "0xC471E417383C01c0053F79660224428Edd37e8e3",
     token: "0xA57eEa3D273d8558F428602fa1ac66cE0b93a441",
     partner: "0x92E8B717f444c1AB0e8fa9439c5AFbB556Dfa51b",
     beneficiaryId: "0x5a1584d7faba43a9baca8c071d9ba2a56db2b16d07eacdf97f5577f764cb25d5",

@@ -1,6 +1,8 @@
 import { DEPLOYMENT as D } from "@/lib/deployment";
 import { EthMark, UsdcMark } from "./Logos";
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 /**
  * The thesis, drawn.
  *
@@ -14,7 +16,7 @@ export function Crossing() {
     <figure className="crossing" aria-labelledby="crossing-cap">
       {/* The bird makes the crossing it is named for: it sits between the rails, facing
           the chain that settles. One identity, one diagram — not a wordmark and a picture. */}
-      <img className="flier" src="/kirogi-mark.png" alt="기러기 (gireogi), the wild goose"
+      <img className="flier" src={`${BASE}/kirogi-mark.png`} alt="기러기 (gireogi), the wild goose"
            width={880} height={699} />
 
       <div className="rail rail--source">

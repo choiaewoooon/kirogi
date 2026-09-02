@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { DEPLOYMENT as D } from "@/lib/deployment";
+import { Contract, Interface, JsonRpcProvider } from "ethers";
 import { findReceipt } from "@/lib/rpc";
+
+const GATEWAY_EVENTS = new Interface([
+  "event RemittanceSent(address indexed sender, bytes32 indexed beneficiaryId, uint256 amount, uint16 purposeCode)",
+]);
+const POOL_VIEW = ["function purposeAllowed(bytes32,uint16) view returns (bool)"];
+const PURPOSE_NAMES: Record<number, string> = { 1: "tuition", 2: "dormitory", 3: "books", 4: "exam fee" };
 
 type Stage = { name: string; state: "pending" | "done" | "waiting" | "fail"; detail: string };
 
@@ -31,6 +38,33 @@ export function Tracker() {
             ? `Block ${receipt.blockNumber.toLocaleString()}, status 0x1`
             : `Block ${receipt.blockNumber.toLocaleString()}, status 0x0 — Creditcoin will refuse this`,
       });
+
+      // What was it sent *for*? The gateway log says; the pool on Creditcoin says whether the
+      // receiver takes that. A valid proof for the wrong purpose is refused there.
+      if (receipt.status !== 1) {
+        // a reverted remittance emits nothing; the stage above already says Creditcoin refuses it
+        setStages(out);
+        return;
+      }
+      const sent = receipt.logs
+        .filter((l) => l.address.toLowerCase() === D.source.gateway.toLowerCase())
+        .map((l) => { try { return GATEWAY_EVENTS.parseLog({ topics: [...l.topics], data: l.data }); } catch { return null; } })
+        .find((e) => e?.name === "RemittanceSent");
+      if (sent) {
+        const code = Number(sent.args.purposeCode);
+        const beneficiary = sent.args.beneficiaryId as string;
+        const allowed: boolean = await new Contract(D.settlement.pool, POOL_VIEW, new JsonRpcProvider(D.settlement.rpc))
+          .purposeAllowed(beneficiary, code);
+        out.push({
+          name: "Purpose",
+          state: allowed ? "done" : "fail",
+          detail: allowed
+            ? `Sent for ${PURPOSE_NAMES[code] ?? `code ${code}`} — the receiver accepts that`
+            : `Sent for ${PURPOSE_NAMES[code] ?? `code ${code}`} — this receiver does not accept it. Creditcoin will refuse the settlement even though the proof is valid`,
+        });
+      } else {
+        out.push({ name: "Purpose", state: "fail", detail: "No RemittanceSent log from the Kirogi gateway in this transaction" });
+      }
 
       const res = await fetch(`${PROVER}/api/v1/attested-height/${D.source.chainKey}`);
       const attested = Number((await res.json()).attestedHeight);
