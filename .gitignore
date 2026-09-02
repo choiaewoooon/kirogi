@@ -22,3 +22,12 @@ node_modules/
 
 # build outputs
 /web/out/
+
+# internal working notes — build log, agent rules, review transcripts, superseded specs.
+# they name competitors and judges; the public repo carries README.md as its documentation.
+/CLAUDE.md
+/PROGRESS.md
+/SPEC.md
+/SPEC-v1-폐기.md
+/12칸-검토-종합.md
+/실측-검증기록.md
