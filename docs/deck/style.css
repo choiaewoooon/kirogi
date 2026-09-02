@@ -1,0 +1,70 @@
+/* Kirogi deck. Same tokens as the site so the two read as one piece of work.
+   Pages are 16:9 at 1280x720 CSS px; Chrome prints them one slide per page. */
+:root {
+  --ink:#08090c; --ink-raised:#0d0f14; --surface:#12141b;
+  --line:#1d2029; --line-bright:#2a2e3a;
+  --text:#f2f4f7; --text-dim:#9aa2b1; --text-faint:#626b7b;
+  --source:#8fa6ff; --settle:#f0b36b; --pass:#46cf95; --fail:#ff6b6b;
+  --display:"Archivo",system-ui,sans-serif; --body:"Archivo",system-ui,sans-serif;
+  --ko:"Pretendard",var(--body); --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#000}
+body{font-family:var(--body);color:var(--text);-webkit-font-smoothing:antialiased}
+
+.slide{
+  width:1280px;height:720px;background:var(--ink);position:relative;overflow:hidden;
+  padding:72px 88px;display:flex;flex-direction:column;justify-content:center;
+  page-break-after:always;break-after:page;margin:0 auto 24px;
+}
+.slide:last-child{page-break-after:auto;break-after:auto;margin-bottom:0}
+
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-faint);margin:0 0 26px}
+h1{font-family:var(--display);font-weight:600;letter-spacing:-.035em;line-height:1.02;margin:0}
+.h-xl{font-size:86px}.h-lg{font-size:56px}.h-md{font-size:38px}
+p{margin:0}
+.lede{font-size:21px;line-height:1.55;color:var(--text-dim);max-width:60ch}
+.small{font-size:15px;line-height:1.6;color:var(--text-dim)}
+.mono{font-family:var(--mono);font-size:13px;color:var(--text-dim)}
+.ko{font-family:var(--ko)}
+b{font-weight:600;color:var(--text)}
+.num{font-variant-numeric:tabular-nums}
+.pageno{position:absolute;right:88px;bottom:44px;font-family:var(--mono);font-size:11px;color:var(--text-faint)}
+.fill{flex:1}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{background:var(--ink-raised);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+.card h3{font-family:var(--display);font-weight:600;font-size:19px;margin:0 0 12px;letter-spacing:-.02em}
+.card p{font-size:14.5px;line-height:1.6;color:var(--text-dim)}
+
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-faint);text-align:left;padding:0 16px 12px 0;font-weight:400}
+td{padding:13px 16px 13px 0;border-top:1px solid var(--line);color:var(--text-dim);vertical-align:top}
+td b{color:var(--text)}
+.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:99px;
+  border:1px solid var(--line-bright);color:var(--text-dim);white-space:nowrap}
+.tag.live{color:var(--pass);border-color:color-mix(in oklab,var(--pass) 40%,transparent)}
+.tag.no{color:var(--fail);border-color:color-mix(in oklab,var(--fail) 40%,transparent)}
+
+.cover{justify-content:center;align-items:center;text-align:center}
+.cover img{height:210px;width:auto;margin-bottom:40px}
+.cover .h-xl{font-size:78px}
+
+.names{display:flex;gap:0;align-items:stretch;margin-top:40px;border:1px solid var(--line);
+  border-radius:14px;overflow:hidden}
+.names > div{flex:1;padding:26px 28px;background:var(--ink-raised);border-left:1px solid var(--line)}
+.names > div:first-child{border-left:0}
+.names .who{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-faint);margin-bottom:10px}
+.names .what{font-family:var(--display);font-weight:600;font-size:23px;letter-spacing:-.02em}
+
+.stat{font-family:var(--display);font-weight:600;font-size:46px;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;line-height:1}
+.stat small{display:block;font-family:var(--body);font-weight:400;font-size:14px;
+  letter-spacing:0;color:var(--text-faint);margin-top:10px}
+
+@page{size:1280px 720px;margin:0}
+@media print{ .slide{margin:0} body{background:var(--ink)} }

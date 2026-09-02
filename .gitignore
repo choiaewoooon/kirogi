@@ -1,0 +1,21 @@
+# Foundry — anchored to the repo root, because a bare `lib/` also swallows web/lib,
+# which is where the deployment addresses and the RPC fallback live.
+/lib/
+/out/
+/cache/
+
+# the official example repo, vendored read-only for reference and not our work
+/examples/
+
+node_modules/
+.next/
+
+# secrets: testnet burner key. never commit.
+.env
+
+# video intermediates — the built reel is committed, the frames that made it are not
+/video/clips/
+/video/segments/
+/video/frames/raw/
+/video/*.html
+/.claude/

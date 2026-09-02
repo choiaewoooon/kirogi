@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Kirogi — BUIDL CTC 2026 Fall</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+</head><body>
+
+<!-- 1 cover -->
+<section class="slide cover">
+  <img src="kirogi-mark.png" alt="">
+  <h1 class="h-xl">Kirogi</h1>
+  <p class="lede" style="margin-top:22px;max-width:46ch">
+    A remittance proven on Ethereum, settled to a school on Creditcoin.
+    No bridge. Nobody trusted to say the money arrived.
+  </p>
+  <p class="mono" style="margin-top:36px;color:var(--text-faint)">
+    BUIDL CTC 2026 FALL · ATTESTCOIN PROTOCOL · TESTNET LIVE
+  </p>
+</section>
+
+<!-- 2 the problem has three names -->
+<section class="slide">
+  <p class="eyebrow">The problem already has a name in every language</p>
+  <h1 class="h-lg" style="max-width:19ch">A family with a border running through it.</h1>
+  <div class="names">
+    <div><p class="who">Korea</p><p class="what ko">기러기</p></div>
+    <div><p class="who">Hong Kong</p><p class="what">astronaut family</p></div>
+    <div><p class="who">The research</p><p class="what">transnational family</p></div>
+  </div>
+  <p class="lede" style="margin-top:38px">
+    One parent earns on one side. The money has to reach the other. Roughly
+    <b>$900B</b> crosses borders this way every year, and the industry has spent a decade
+    making that crossing <b>faster and cheaper</b>.
+  </p>
+  <p class="pageno">02</p>
+</section>
+
+<!-- 3 what is still broken -->
+<section class="slide">
+  <p class="eyebrow">What speed and price did not fix</p>
+  <h1 class="h-lg" style="max-width:22ch">Somebody still has to be believed.</h1>
+  <div class="grid2" style="margin-top:44px">
+    <div>
+      <p class="lede">
+        A payout on the receiving side happens before the sending side has settled. Somebody
+        fronts that money, and they front it because an operator told them the deposit was real.
+      </p>
+      <p class="lede" style="margin-top:22px">
+        That operator is the trust in the system. Every corridor has one.
+      </p>
+    </div>
+    <div class="card">
+      <h3>What a contract can check today</h3>
+      <p>
+        Nothing. A contract on the receiving chain cannot see a deposit on Ethereum. It can only
+        be told, by a bridge, an oracle, or a company. Each of those is a party that can be
+        wrong, be compromised, or simply stop.
+      </p>
+    </div>
+  </div>
+  <p class="pageno">03</p>
+</section>
+
+<!-- 4 the product -->
+<section class="slide">
+  <p class="eyebrow">Kirogi</p>
+  <h1 class="h-lg" style="max-width:20ch">The money never crosses. The proof does.</h1>
+  <div class="grid3" style="margin-top:48px">
+    <div class="card">
+      <h3 style="color:var(--source)">On Ethereum</h3>
+      <p>A parent deposits USDC into an ownerless gateway. The liquidity provider's treasury
+      receives it, and it stays on that chain.</p>
+    </div>
+    <div class="card">
+      <h3>In between</h3>
+      <p>The Attestcoin Protocol proves that exact transaction to Creditcoin. No value moves.
+      Only the fact that it happened.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--settle)">On Creditcoin</h3>
+      <p>A pre-funded pool pays the registered school. Real tokens, already there, released the
+      moment the proof verifies.</p>
+    </div>
+  </div>
+  <p class="lede" style="margin-top:40px">
+    This is how remittance corridors already work: inventory on both sides, netted later.
+    The part that was missing is a trustworthy answer to <b>did the sender really pay?</b>
+  </p>
+  <p class="pageno">04</p>
+</section>
+
+<!-- 5 the five checks -->
+<section class="slide">
+  <p class="eyebrow">Depth of Attestcoin use</p>
+  <h1 class="h-lg" style="max-width:24ch">Five things must be true inside one receipt.</h1>
+  <table style="margin-top:38px">
+    <tr><th style="width:30%">Check</th><th style="width:44%">Why it exists</th><th>Reads</th></tr>
+    <tr><td><b>Inclusion</b></td><td>Merkle proof plus a continuity chain back to an on-chain attestation</td><td class="mono">precompile 0x0FD2</td></tr>
+    <tr><td><b>Success</b></td><td>The precompile proves inclusion, <b>not success</b>. A reverted remittance carries a perfectly valid proof</td><td class="mono">receiptStatus</td></tr>
+    <tr><td><b>Canonical token</b></td><td>Sepolia hosts more than one contract answering to the name USDC</td><td class="mono">log address</td></tr>
+    <tr><td><b>Destination</b></td><td>The tokens must have landed in the registered treasury, from the claimed sender, for the claimed amount</td><td class="mono">topics + data</td></tr>
+    <tr><td><b>Single use</b></td><td>A proof is a bearer object. Presenting it twice must not pay twice</td><td class="mono">chain·height·index</td></tr>
+  </table>
+  <p class="lede" style="margin-top:34px;font-size:19px">
+    The load-bearing one is the canonical token log. <b>An admin key can sign a payment that never
+    happened; a USDC log cannot exist unless USDC actually moved.</b>
+  </p>
+  <p class="pageno">05</p>
+</section>
+
+<!-- 6 evidence -->
+<section class="slide">
+  <p class="eyebrow">It ran</p>
+  <h1 class="h-lg" style="max-width:20ch">One remittance, end to end, on public testnets.</h1>
+  <div class="grid3" style="margin-top:44px">
+    <div class="card"><p class="stat num">12.000000<small>USDC deposited on Sepolia, block 11,604,757</small></p></div>
+    <div class="card"><p class="stat num">7m 30s<small>waiting for finality and attestation</small></p></div>
+    <div class="card"><p class="stat num">12.000000<small>KSU paid to the school on Creditcoin</small></p></div>
+  </div>
+  <table style="margin-top:40px">
+    <tr><th style="width:34%">Artifact</th><th>Address / hash</th></tr>
+    <tr><td><b>Source deposit</b></td><td class="mono">0x0a31dd52776f8d656cc5be3178a367f8283584e2cd7396038880dfb0b2c02e2b</td></tr>
+    <tr><td><b>Verified &amp; settled</b></td><td class="mono">0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307 · gas 441,364</td></tr>
+    <tr><td><b>KirogiASC</b> (Creditcoin)</td><td class="mono">0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45</td></tr>
+    <tr><td><b>RemittanceGateway</b> (Sepolia)</td><td class="mono">0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053</td></tr>
+  </table>
+  <p class="pageno">06</p>
+</section>
+
+<!-- 7 what it refuses -->
+<section class="slide">
+  <p class="eyebrow">What it turns away</p>
+  <h1 class="h-lg" style="max-width:24ch">A contract is only as good as what it refuses.</h1>
+  <table style="margin-top:36px">
+    <tr><th style="width:46%">Attempt</th><th style="width:30%">Result</th><th>Where</th></tr>
+    <tr><td><b>Prove a remittance that reverted on Ethereum</b><br><span class="small">The proof was valid. Without the status check this pays out.</span></td>
+        <td><span class="tag no">SourceTransactionFailed()</span><br><span class="mono" style="font-size:11px">0xc60cdba1</span></td>
+        <td><span class="tag live">on-chain</span></td></tr>
+    <tr><td><b>Submit the same proof twice</b></td><td><span class="tag no">Query already processed</span></td><td><span class="tag">test suite</span></td></tr>
+    <tr><td><b>Point the config at a look-alike USDC</b><br><span class="small">A second Sepolia contract reads name, symbol and decimals as USDC.</span></td>
+        <td><span class="tag no">NoCanonicalTransfer()</span></td><td><span class="tag">test suite</span></td></tr>
+    <tr><td><b>Redirect a proof to a different partner</b></td><td><span class="tag no">unrelated partner receives 0</span></td><td><span class="tag">test suite</span></td></tr>
+  </table>
+  <p class="lede" style="margin-top:32px">
+    <b>20 tests pass.</b> The first row happened on the live network: a real reverted Sepolia
+    transaction, a real valid proof, refused by Creditcoin.
+  </p>
+  <p class="pageno">07</p>
+</section>
+
+<!-- 8 why Creditcoin -->
+<section class="slide">
+  <p class="eyebrow">Why this belongs on Creditcoin</p>
+  <h1 class="h-lg" style="max-width:22ch">Ethereum has the liquidity. Creditcoin has the borrowers.</h1>
+  <div class="grid2" style="margin-top:44px">
+    <div>
+      <p class="lede">
+        Creditcoin has recorded on-chain lending for emerging-market institutions since 2017 —
+        Aella in Nigeria, and a central-bank agreement behind it. Those partners are already here.
+        They are not on Ethereum, and they never will be.
+      </p>
+      <p class="lede" style="margin-top:22px">
+        The stablecoin, meanwhile, is only deep on Ethereum.
+      </p>
+    </div>
+    <div class="card">
+      <h3>The one thing that was missing</h3>
+      <p style="font-size:16px">
+        For a provider to release local money before the foreign leg settles, it has to know the
+        deposit is real. Attestcoin readability is the only way to know that without a bridge and
+        without an operator's word.
+      </p>
+      <p style="font-size:16px;margin-top:16px;color:var(--text)">
+        Writability is unreleased, and that suits this design: Creditcoin never has to send
+        anything back. It is where the money lands.
+      </p>
+    </div>
+  </div>
+  <p class="pageno">08</p>
+</section>
+
+<!-- 9 business -->
+<section class="slide">
+  <p class="eyebrow">How it earns</p>
+  <h1 class="h-lg" style="max-width:20ch">The spread the corridor already charges.</h1>
+  <div class="grid3" style="margin-top:44px">
+    <div class="card"><h3>Liquidity provider</h3><p>Takes the FX and timing spread on each remittance, the same margin money-transfer operators earn today. Kirogi removes their reconciliation risk, not their revenue.</p></div>
+    <div class="card"><h3>Settlement partner</h3><p>Schools and clinics get paid without holding a treasury or waiting on a wire. Onboarding is a registration, not an integration.</p></div>
+    <div class="card"><h3>Protocol</h3><p>A fee per verified settlement. It is charged on proof, not on promise, which is the only fee in this stack nobody can dispute.</p></div>
+  </div>
+  <p class="lede" style="margin-top:42px">
+    Unit economics follow the corridor, not the chain: volume × spread, minus one Creditcoin
+    verification. <b>That verification measured 0.000664 CTC.</b>
+  </p>
+  <p class="pageno">09</p>
+</section>
+
+<!-- 10 the confession -->
+<section class="slide">
+  <p class="eyebrow">Before you ask</p>
+  <h1 class="h-lg" style="max-width:22ch">The proof covers less than the story does.</h1>
+  <table style="margin-top:34px">
+    <tr><td style="width:34%;border-top:0"><b>Purpose is self-reported</b></td><td style="border-top:0">The gateway records what the sender says the money is for. Attestcoin proves the transfer, never that the label is true.</td></tr>
+    <tr><td><b>Identity is off-chain</b></td><td>Nothing binds a beneficiary id to a person, so a sender and a recipient could be the same someone.</td></tr>
+    <tr><td><b>Partners are whitelisted</b></td><td>That is a trusted role. Restricting payouts to registered addresses limits transfers, not collusion.</td></tr>
+    <tr><td><b>Off-ramp is a contract</b></td><td>How the provider converts inventory into local currency sits outside this system.</td></tr>
+    <tr><td><b>One source chain</b></td><td>Attestcoin reads Ethereum and Sepolia and nothing else yet. Our source config is a registry, so another chain is a call, not a rewrite.</td></tr>
+  </table>
+  <p class="lede" style="margin-top:30px">
+    Prior art exists too: PayAngel has moved <b>$450M</b> paying schools directly, without a
+    blockchain. Our claim is not the idea. It is the settlement trust.
+  </p>
+  <p class="pageno">10</p>
+</section>
+
+<!-- 11 roadmap + ask -->
+<section class="slide">
+  <p class="eyebrow">Next</p>
+  <h1 class="h-lg" style="max-width:20ch">From one corridor to a credit layer.</h1>
+  <div class="grid3" style="margin-top:44px">
+    <div class="card"><h3>Now — testnet</h3><p>Proven deposit settles to a registered partner. Contracts live on Sepolia and CC3, 20 tests, public evidence page.</p></div>
+    <div class="card"><h3>Next — the record</h3><p>Every settled remittance is a repayment-shaped event. Turn the ledger into a credit history the partners can lend against.</p></div>
+    <div class="card"><h3>Then — default events</h3><p>Machine-decidable credit events proven the same way, so the record has two sides instead of one.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:46px">
+    <div>
+      <p class="eyebrow" style="margin-bottom:14px">The ask</p>
+      <p class="lede">CEIP, to run a single live corridor with one provider and one settlement partner, and to publish what it costs per remittance.</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom:14px">Built by</p>
+      <p class="lede">One person, in public. Every address and transaction in this deck is clickable at the evidence page.</p>
+    </div>
+  </div>
+  <p class="pageno">11</p>
+</section>
+
+<!-- 12 close -->
+<section class="slide cover">
+  <img src="kirogi-mark.png" alt="" style="height:150px">
+  <h1 class="h-lg" style="max-width:20ch;text-align:center">The money never crossed.<br>The proof did.</h1>
+  <p class="mono" style="margin-top:34px;color:var(--text-faint)">KIROGI · BUIDL CTC 2026 FALL</p>
+</section>
+
+</body></html>

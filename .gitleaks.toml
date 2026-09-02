@@ -1,0 +1,9 @@
+# gitleaks flags `"token": "0x…"` as a generic API key. Here `token` is always an ERC-20
+# contract address: 20 bytes, public on every explorer. Allow exactly that shape and nothing
+# longer — a 32-byte private key (64 hex) is still caught.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "EVM addresses are public identifiers, not secrets"
+regexes = ['''\b0x[a-fA-F0-9]{40}\b''']

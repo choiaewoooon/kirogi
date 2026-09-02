@@ -1,0 +1,85 @@
+<!doctype html><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../card.css">
+<style>
+body.wait{height:1080px;box-sizing:border-box;overflow:hidden;padding:88px 120px 80px;
+  justify-content:flex-start;gap:0}
+.wait h2{font-family:var(--display);font-weight:600;font-size:40px;letter-spacing:-.02em;
+  color:var(--text);margin:0}
+.wait .where{font-family:var(--mono);font-size:22px;color:var(--text-faint);margin:14px 0 0;max-width:none}
+.wait hr{border:0;border-top:1px solid var(--line);margin:34px 0 0}
+.stage{display:flex;gap:48px;margin-top:44px;align-items:flex-start}
+.term{flex:1;background:#0d0f14;border:1px solid var(--line);border-radius:14px;
+  padding:38px 42px;font-family:var(--mono);font-size:20px;line-height:2.05;color:var(--text-dim);
+  min-height:640px;white-space:nowrap;overflow:hidden}
+/* card.css styles bare <p> at 30px with a 32px margin; the log lines must opt out */
+.term .l{opacity:0;transition:opacity .18s;font-size:20px;line-height:2.05;margin:0;max-width:none}
+.term .l.on{opacity:1}
+.term .dim{color:var(--text-faint)}
+.term .ok{color:var(--pass)}
+.term .cmd{color:var(--text)}
+.clock{width:300px;flex:none;text-align:right}
+.clock .lbl{font-family:var(--mono);font-size:19px;letter-spacing:.2em;color:var(--text-faint);
+  text-transform:uppercase}
+.clock .t{font-family:var(--mono);font-weight:500;font-size:92px;letter-spacing:-.03em;
+  color:var(--text);margin-top:18px;font-variant-numeric:tabular-nums}
+.clock .sub{font-family:var(--mono);font-size:20px;color:var(--text-faint);margin-top:14px}
+.bar{margin-top:30px;height:6px;border-radius:3px;background:#1a1d24;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--pass);border-radius:3px}
+</style>
+<body class="wait">
+  <h2>The wait is real</h2>
+  <p class="where">the real 7m30s attestation wait, replayed at 47&times;</p>
+  <hr>
+  <div class="stage">
+    <div class="term" id="term"></div>
+    <div class="clock">
+      <p class="lbl">elapsed</p>
+      <p class="t" id="t">0:00</p>
+      <p class="sub" id="sub">waiting for attestation</p>
+      <div class="bar"><i id="bar"></i></div>
+    </div>
+  </div>
+</body>
+<script>
+// Each line is placed at the second of the real run it happened at; the clock runs at
+// 45x so the true 7m30s wait reads in ten seconds without faking any of the output.
+const LINES = [
+  [  0, 'cmd',  '$ npx tsx scripts/submit_proof.ts 0x0a31dd52… --action 1'],
+  [  0, 'sp',   ''],
+  [  2, '',     'source tx in block 11604757'],
+  [  4, '',     'waiting for attestation…'],
+  [ 30, 'dim',  'Height 11604757 not yet attested. Latest: 11604720. Retrying in 15000ms…'],
+  [135, 'dim',  'Height 11604757 not yet attested. Latest: 11604730. Retrying in 15000ms…'],
+  [255, 'dim',  'Height 11604757 not yet attested. Latest: 11604740. Retrying in 15000ms…'],
+  [375, 'dim',  'Height 11604757 not yet attested. Latest: 11604750. Retrying in 15000ms…'],
+  [450, 'ok',   'attested'],
+  [452, '',     'proof: header 11604757, txIndex 139, 8 merkle siblings, 4 continuity roots'],
+  [456, '',     'submitted 0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307'],
+  [468, 'cmd',  'settled in block 5405280 (gas 441364)'],
+];
+const term = document.getElementById('term');
+const els = LINES.map(([, cls, text]) => {
+  const p = document.createElement('p');
+  p.className = 'l' + (cls && cls !== 'sp' ? ' ' + cls : '');
+  p.innerHTML = text === '' ? '&nbsp;' : text;
+  term.appendChild(p);
+  return p;
+});
+const TOTAL = 468, SPEED = 47;           // seconds of real run, and how fast we replay it
+const t = document.getElementById('t'), sub = document.getElementById('sub'),
+      bar = document.getElementById('bar');
+let start = null;
+function fmt(s){ return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0'); }
+function step(now){
+  if (start === null) start = now;
+  const elapsed = Math.min(((now - start) / 1000) * SPEED, TOTAL);
+  t.textContent = fmt(elapsed);
+  bar.style.width = (elapsed / TOTAL * 100).toFixed(2) + '%';
+  if (elapsed >= 450) { sub.textContent = 'attested — settling'; sub.style.color = 'var(--pass)'; }
+  LINES.forEach(([at], i) => { if (elapsed >= at) els[i].classList.add('on'); });
+  if (elapsed < TOTAL) requestAnimationFrame(step);
+  else window.__done = true;
+}
+requestAnimationFrame(step);
+</script>

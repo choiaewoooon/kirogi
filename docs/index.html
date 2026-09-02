@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kirogi — remittance that settles on proof</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#08090c;--raised:#0d0f14;--line:#1d2029;--text:#f2f4f7;--dim:#9aa2b1;--faint:#626b7b;
+--pass:#46cf95;--settle:#f0b36b;--source:#8fa6ff}
+*{box-sizing:border-box}body{margin:0;background:var(--ink);color:var(--text);
+font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:1040px;margin:0 auto;padding:72px 24px 96px}
+.mark{height:96px}h1{font-size:clamp(36px,6vw,64px);letter-spacing:-.035em;line-height:1.02;margin:24px 0 12px}
+.lede{font-size:20px;color:var(--dim);max-width:52ch;margin:0 0 44px;line-height:1.5}
+video{width:100%;border-radius:14px;border:1px solid var(--line);background:#000;display:block}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:40px 0}
+.links a{display:block;padding:18px 20px;border:1px solid var(--line);border-radius:12px;
+background:var(--raised);color:var(--text);text-decoration:none}
+.links a small{display:block;color:var(--faint);font-family:"JetBrains Mono",monospace;font-size:12px;
+letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.links a:hover{border-color:#2a2e3a}
+h2{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
+font-family:"JetBrains Mono",monospace;font-weight:500;margin:48px 0 16px}
+table{width:100%;border-collapse:collapse;font-family:"JetBrains Mono",monospace;font-size:13px}
+td{padding:10px 0;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{color:var(--dim);width:220px;font-family:Archivo,sans-serif;font-size:14px}
+td a{color:var(--source);text-decoration:none;word-break:break-all}
+.ok{color:var(--pass)}.no{color:#ff6b6b}
+footer{margin-top:64px;color:var(--faint);font-size:13px;font-family:"JetBrains Mono",monospace}
+</style></head><body><main>
+<img class="mark" src="kirogi-mark.png" alt="">
+<h1>The money never crossed.<br>The proof did.</h1>
+<p class="lede">A remittance proven on Ethereum, settled to a school on Creditcoin through the
+Attestcoin Protocol. No bridge. Nobody trusted to say the money arrived.</p>
+
+<video controls playsinline preload="metadata" src="Kirogi-demo.mp4"></video>
+
+<div class="links">
+  <a href="Kirogi-deck.pdf"><small>Deck · PDF</small>12 slides, 0.7 MB</a>
+  <a href="deck/"><small>Deck · in browser</small>Same slides, rendered live</a>
+  <a href="https://github.com/choiaewoooon/kirogi"><small>Source</small>Contracts, tests, worker, site</a>
+  <a href="https://github.com/choiaewoooon/kirogi#readme"><small>Technical doc</small>How Attestcoin is used, and what it does not claim</a>
+</div>
+
+<h2>It ran — every hash is on a public explorer</h2>
+<table>
+<tr><td>Deposit on Sepolia</td><td><a href="https://eth-sepolia.blockscout.com/tx/0x0a31dd52776f8d656cc5be3178a367f8283584e2cd7396038880dfb0b2c02e2b">0x0a31dd52…c02e2b</a> — 12 USDC, <span class="ok">success</span></td></tr>
+<tr><td>Settlement on Creditcoin</td><td><a href="https://creditcoin-testnet.blockscout.com/tx/0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307">0x9c0857ec…550307</a> — 12 KSU to the school, <span class="ok">success</span></td></tr>
+<tr><td>A reverted deposit, refused</td><td><a href="https://eth-sepolia.blockscout.com/tx/0xb17c17de63ce94d14534aa610212f41f6fc6f54ec01f06fa3e976c67482606e0">0xb17c17de…2606e0</a> — proof valid, tx included, status 0 → <span class="no">SourceTransactionFailed()</span></td></tr>
+<tr><td>KirogiASC (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45">0x4Ea7D8d6…cFcD45</a></td></tr>
+<tr><td>SettlementPool (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98">0x3F6d4A40…2F2A98</a></td></tr>
+<tr><td>RemittanceGateway (Sepolia)</td><td><a href="https://eth-sepolia.blockscout.com/address/0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053">0x1C2152e3…9Ab053</a></td></tr>
+</table>
+<footer>BUIDL CTC 2026 Fall · Attestcoin Protocol · Creditcoin CC3 testnet</footer>
+</main></body></html>
