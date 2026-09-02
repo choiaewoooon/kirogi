@@ -5,5 +5,6 @@
 useDefault = true
 
 [allowlist]
-description = "EVM addresses are public identifiers, not secrets"
+description = "EVM addresses are public identifiers; bundled third-party JS carries vendors' public analytics keys"
 regexes = ['''\b0x[a-fA-F0-9]{40}\b''']
+paths = ['''^docs/app/_next/''']

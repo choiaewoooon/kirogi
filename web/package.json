@@ -7,10 +7,16 @@
     "start": "next start -p 3100"
   },
   "dependencies": {
+    "@privy-io/react-auth": "^3.39.0",
+    "@privy-io/wagmi": "^4.0.17",
+    "@stripe/stripe-js": "^9.15.0",
+    "@tanstack/react-query": "^5.102.8",
     "ethers": "^6.17.0",
     "next": "15.5.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "viem": "^2.56.3",
+    "wagmi": "^3.7.7"
   },
   "devDependencies": {
     "@types/node": "^22",

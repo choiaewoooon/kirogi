@@ -19,3 +19,6 @@ node_modules/
 /video/frames/raw/
 /video/*.html
 /.claude/
+
+# build outputs
+/web/out/

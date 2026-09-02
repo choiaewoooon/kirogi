@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { Providers } from "./providers";
 
 // "" in dev; "/kirogi/app" in the GitHub Pages export. <Link> handles it on its own, plain
 // <img>/<a> and metadata do not.
@@ -46,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Link href="/track">Track</Link>
           <Link href="/send">Send</Link>
         </nav>
-        {children}
+        <Providers>{children}</Providers>
         <footer className="shell" style={{ padding: "3rem var(--gutter) 4rem", borderTop: "1px solid var(--line)" }}>
           <p className="mono" style={{ color: "var(--text-faint)", margin: 0 }}>
             Testnet only. Built for BUIDL CTC 2026 Fall on the Attestcoin Protocol.
