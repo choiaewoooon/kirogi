@@ -4,6 +4,11 @@
   <p><b>A remittance proven on Ethereum, settled to a school on Creditcoin.<br>
   No bridge. Nobody trusted to say the money arrived.</b></p>
   <p>
+    <a href="https://choiaewoooon.github.io/kirogi/Kirogi-demo.mp4"><b>Demo video</b></a> ·
+    <a href="https://choiaewoooon.github.io/kirogi/Kirogi-deck.pdf"><b>Deck (PDF)</b></a> ·
+    <a href="https://choiaewoooon.github.io/kirogi/">Project page</a>
+  </p>
+  <p>
     <a href="#it-ran">Live transactions</a> ·
     <a href="#what-it-refuses">What it refuses</a> ·
     <a href="#what-this-does-not-claim">What this does not claim</a>
