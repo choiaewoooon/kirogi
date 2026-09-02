@@ -239,7 +239,9 @@ a { color: inherit; }
   border-radius: 10px; font-size: 0.9rem; font-weight: 500; text-decoration: none;
   border: 1px solid var(--line-bright); color: var(--text); transition: background-color 140ms ease-out, border-color 140ms ease-out;
 }
-.btn--primary { background: var(--text); color: var(--ink); border-color: var(--text); }
+/* the same look on a <button>: the UA gives buttons their own background, font and cursor */
+button.btn { background: transparent; color: var(--text); font: inherit; cursor: pointer; appearance: none; }
+.btn--primary, button.btn.btn--primary { background: var(--text); color: var(--ink); border-color: var(--text); }
 .btn--primary:hover { background: #fff; }
 .btn--ghost:hover { border-color: var(--text-dim); }
 
