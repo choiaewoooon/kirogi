@@ -79,9 +79,11 @@ export default function Evidence() {
 Check it yourself.
         </h1>
         <p className="lede" style={{ marginTop: "1.5rem" }}>
-One remittance was proven and settled. One was rejected on-chain. Both are on a public
-          explorer, along with every address below. The rest of the rejections are covered by the
-          test suite, and each row says which is which.
+Eleven remittances were sent. Seven were proven and settled — the school holds 18 KSU. Five
+            were refused on-chain: four because the deposit reverted on Ethereum, one because it was
+            sent for an exam fee and this school is registered for tuition, dormitory and books. Every
+            hash is on a public explorer, along with every address below. The remaining refusals are
+            covered by the test suite, and each row says which is which.
         </p>
       </section>
 

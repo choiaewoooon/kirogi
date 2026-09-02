@@ -28,6 +28,7 @@ SCENES = [
     ("still", "12-school",   4.5),
     ("still", "07-refuse",   3.5),
     ("still", "21-refuse",   7.0),    # the refusal — longest hold in the reel
+    ("still", "23-purpose",  7.0),    # the other refusal: valid proof, wrong purpose
     ("still", "22-tests",    4.5),
     ("clip",  "track",       None),   # somebody actually using it
     ("still", "13-evidence", 4.5),

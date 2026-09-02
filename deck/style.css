@@ -68,3 +68,8 @@ td b{color:var(--text)}
 
 @page{size:1280px 720px;margin:0}
 @media print{ .slide{margin:0} body{background:var(--ink)} }
+
+/* dense tables for the two slides that grew a row */
+table.tight td,table.tight th{padding:7px 12px;line-height:1.35}
+
+.grid3.compact .card{padding:12px 16px}.grid3.compact .stat{font-size:36px}.grid3.compact .stat small{font-size:12px}

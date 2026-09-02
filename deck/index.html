@@ -94,7 +94,7 @@
 <section class="slide">
   <p class="eyebrow">Depth of Attestcoin use</p>
   <h1 class="h-lg" style="max-width:24ch">Six things must be true before anyone is paid.</h1>
-  <table style="margin-top:38px">
+  <table class="tight" style="margin-top:18px;font-size:15px">
     <tr><th style="width:30%">Check</th><th style="width:44%">Why it exists</th><th>Reads</th></tr>
     <tr><td><b>Inclusion</b></td><td>Merkle proof plus a continuity chain back to an on-chain attestation</td><td class="mono">precompile 0x0FD2</td></tr>
     <tr><td><b>Success</b></td><td>The precompile proves inclusion, <b>not success</b>. A reverted remittance carries a perfectly valid proof</td><td class="mono">receiptStatus</td></tr>
@@ -103,7 +103,7 @@
     <tr><td><b>Single use</b></td><td>A proof is a bearer object. Presenting it twice must not pay twice</td><td class="mono">chain·height·index</td></tr>
     <tr><td><b>Purpose</b></td><td>What the money was sent <b>for</b> must be something the receiver is registered to take. A school is not paid for an exam fee it does not charge</td><td class="mono">allowedPurposesOf</td></tr>
   </table>
-  <p class="lede" style="margin-top:34px;font-size:19px">
+  <p class="lede" style="margin-top:10px;font-size:16px;max-width:72ch">
     The load-bearing one is the canonical token log. <b>An admin key can sign a payment that never
     happened; a USDC log cannot exist unless USDC actually moved.</b> The sixth is where the
     sender's intent stops being a label and becomes a condition of payment.
@@ -114,19 +114,23 @@
 <!-- 6 evidence -->
 <section class="slide">
   <p class="eyebrow">It ran</p>
-  <h1 class="h-lg" style="max-width:20ch">One remittance, end to end, on public testnets.</h1>
-  <div class="grid3" style="margin-top:44px">
-    <div class="card"><p class="stat num">12.000000<small>USDC deposited on Sepolia, block 11,604,757</small></p></div>
-    <div class="card"><p class="stat num">7m 30s<small>waiting for finality and attestation</small></p></div>
-    <div class="card"><p class="stat num">12.000000<small>KSU paid to the school on Creditcoin</small></p></div>
+  <h1 class="h-lg" style="max-width:22ch">Eleven remittances, on public testnets, some built to be refused.</h1>
+  <div class="grid3 compact" style="margin-top:22px">
+    <div class="card"><p class="stat num">11<small>deposits on Sepolia · 8 succeeded, 3 made to revert</small></p></div>
+    <div class="card"><p class="stat num">7<small>settled on Creditcoin · the school holds 18 KSU</small></p></div>
+    <div class="card"><p class="stat num">5<small>refused on-chain · 4 reverted deposits, 1 wrong purpose</small></p></div>
   </div>
-  <table style="margin-top:40px">
+  <table class="tight" style="margin-top:16px;font-size:13px">
     <tr><th style="width:34%">Artifact</th><th>Address / hash</th></tr>
-    <tr><td><b>Source deposit</b></td><td class="mono">0x0a31dd52776f8d656cc5be3178a367f8283584e2cd7396038880dfb0b2c02e2b</td></tr>
-    <tr><td><b>Verified &amp; settled</b></td><td class="mono">0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307 · gas 441,364</td></tr>
-    <tr><td><b>KirogiASC</b> (Creditcoin)</td><td class="mono">0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45</td></tr>
-    <tr><td><b>RemittanceGateway</b> (Sepolia)</td><td class="mono">0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053</td></tr>
+    <tr><td><b>First deposit → settlement</b></td><td class="mono">0x0a31dd52…c02e2b → 0x9c0857ec…550307 · 7m30s wait · gas 441,364</td></tr>
+    <tr><td><b>Exam fee, refused</b> <span class="small">valid proof, status 1</span></td><td class="mono">0xae47c57e…365ff → 0xb03abeec…9714e9 · PurposeNotAllowed · block 5,417,819</td></tr>
+    <tr><td><b>Reverted deposit, refused</b></td><td class="mono">0xf1b9e4f8…7d0e5a → 0xc4fbe0e6…0dbb4d · SourceTransactionFailed</td></tr>
+    <tr><td><b>KirogiASC</b> · <b>Pool v2</b></td><td class="mono">0x4Ea7D8d6…cFcD45 · 0xC471E417…37e8e3</td></tr>
   </table>
+  <p class="lede" style="margin-top:6px;font-size:14px;max-width:88ch">
+    All ten batch outcomes were predicted by <span class="mono">eth_call</span> through the real
+    precompile before broadcast. The refusals were broadcast anyway — a log line is not evidence.
+  </p>
   <p class="pageno">06</p>
 </section>
 
@@ -134,7 +138,7 @@
 <section class="slide">
   <p class="eyebrow">What it turns away</p>
   <h1 class="h-lg" style="max-width:24ch">A contract is only as good as what it refuses.</h1>
-  <table style="margin-top:36px">
+  <table class="tight" style="margin-top:16px;font-size:15px">
     <tr><th style="width:46%">Attempt</th><th style="width:30%">Result</th><th>Where</th></tr>
     <tr><td><b>Prove a remittance that reverted on Ethereum</b><br><span class="small">The proof was valid. Without the status check this pays out.</span></td>
         <td><span class="tag no">SourceTransactionFailed()</span><br><span class="mono" style="font-size:11px">0xc60cdba1</span></td>
@@ -144,12 +148,13 @@
         <td><span class="tag no">NoCanonicalTransfer()</span></td><td><span class="tag">test suite</span></td></tr>
     <tr><td><b>Redirect a proof to a different partner</b></td><td><span class="tag no">unrelated partner receives 0</span></td><td><span class="tag">test suite</span></td></tr>
     <tr><td><b>Prove a <i>successful</i> remittance sent for a purpose the school does not take</b><br><span class="small">Valid proof, status 1, wrong purpose. The receiver's registration decides.</span></td>
-        <td><span class="tag no">PurposeNotAllowed()</span></td><td><span class="tag" id="purpose-where">test suite</span></td></tr>
+        <td><span class="tag no">PurposeNotAllowed()</span><br><span class="mono" style="font-size:11px">block 5,417,819</span></td><td><span class="tag live">on-chain</span></td></tr>
   </table>
-  <p class="lede" style="margin-top:32px">
+  <p class="lede" style="margin-top:16px;font-size:18px;max-width:72ch">
     <b>24 tests pass, and the same proofs run unmocked through the real precompile by
-    <span class="mono">eth_call</span>.</b> The first row happened on the live network: a real
-    reverted Sepolia transaction, a real valid proof, refused by Creditcoin.
+    <span class="mono">eth_call</span>.</b> Two rows happened on the live network: a reverted
+    Sepolia deposit, and a successful one sent for a purpose the school does not take. Both
+    carried valid proofs. Both were refused.
   </p>
   <p class="pageno">07</p>
 </section>

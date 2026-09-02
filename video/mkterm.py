@@ -58,8 +58,26 @@ term("22-tests", "forge test", [
  '<span class="ok">[PASS]</span> test_RejectsRevertedSourceTransaction()',
  '<span class="ok">[PASS]</span> test_RejectsWhenTokenIsNotCanonical()',
  '<span class="ok">[PASS]</span> test_PaysOnlyTheBeneficiaryNamedInTheProof()',
+ '<span class="ok">[PASS]</span> test_RefusesProvenRemittanceForDisallowedPurpose()',
+ '<span class="ok">[PASS]</span> test_RejectsPurposeNotAllowed()',
  '<span class="dim">…</span>',
  "",
- '<b>20 tests passed, 0 failed</b>  <span class="dim">— replaying real captured proofs</span>',
+ '<b>24 tests passed, 0 failed</b>  <span class="dim">— replaying real captured proofs</span>',
 ])
 print("done")
+
+# verbatim from scripts/settle_batch.ts — the fourth deposit of the batch
+term("23-purpose", "a successful deposit, sent for the wrong purpose", [
+ '<span class="dim">$</span> npx tsx scripts/settle_batch.ts fixtures/batch-2026-09-02.json',
+ '',
+ '10 source txs, highest block 11619896. waiting for attestation…',
+ '<span class="ok">attested</span> after 303s',
+ '',
+ 'ok   0xa40711ceb3…  proof 7 sib / 7 roots  dry-run: <span class="ok">would settle</span>',
+ '     → 0xe58565d2…  block 5417816  status 1  gas 453390',
+ 'ok   0xae47c57ec4…  proof 7 sib / 3 roots  dry-run: <span class="no">PurposeNotAllowed(0x5a1584d7…, 4)</span>',
+ '     → 0xb03abeec…  block 5417819  <b>status 0</b>  gas 407820',
+ '',
+ '<span class="dim">The deposit succeeded. The proof was valid. It was sent for an exam fee,</span>',
+ '<span class="dim">and this school is registered for tuition, dormitory and books.</span>',
+])

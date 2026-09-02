@@ -1,0 +1,176 @@
+{
+  "settledAt": "2026-09-02T13:43:16.959Z",
+  "asc": "0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45",
+  "results": [
+    {
+      "kind": "ok",
+      "hash": "0xa40711ceb30249e82e0aec05bc0a378dcd35001c2d828255a38616e15e4a4256",
+      "block": 11619884,
+      "amount": "1000000",
+      "purpose": 1,
+      "proof": {
+        "siblings": 7,
+        "roots": 7,
+        "txIndex": 108
+      },
+      "dryRun": "would settle",
+      "cc3Tx": "0xe58565d23fc3a0a4842b11ad868ec8387458c9ad941768fccbd01de5c3b84488",
+      "cc3Block": 5417816,
+      "cc3Status": 1,
+      "gas": "453390"
+    },
+    {
+      "kind": "ok",
+      "hash": "0xdf214d21dc69c0aaa4079e4416b4a3979656cad4fdf95c5c2691d463610afbe7",
+      "block": 11619885,
+      "amount": "1000000",
+      "purpose": 2,
+      "proof": {
+        "siblings": 8,
+        "roots": 6,
+        "txIndex": 123
+      },
+      "dryRun": "would settle",
+      "cc3Tx": "0xf3837bd622c569b6c9eb75676a198deadd3966689b73d679581557ee3b080b21",
+      "cc3Block": 5417817,
+      "cc3Status": 1,
+      "gas": "453838"
+    },
+    {
+      "kind": "ok",
+      "hash": "0xc0959f865178aa5e7bdaab101bb60e2b55795181d2ca0e6e60c328ff70e1d8fa",
+      "block": 11619886,
+      "amount": "1000000",
+      "purpose": 3,
+      "proof": {
+        "siblings": 8,
+        "roots": 5,
+        "txIndex": 86
+      },
+      "dryRun": "would settle",
+      "cc3Tx": "0xdcd29a057d1f30c7eb821dcd710aef2e2a7971314ecbaae3df01cfb643470e05",
+      "cc3Block": 5417818,
+      "cc3Status": 1,
+      "gas": "453390"
+    },
+    {
+      "kind": "ok",
+      "hash": "0xae47c57ec4f0ce4c9c4e327eda807d9f6b52890aae2ccedd749f96b1a59365ff",
+      "block": 11619888,
+      "amount": "1000000",
+      "purpose": 4,
+      "proof": {
+        "siblings": 7,
+        "roots": 3,
+        "txIndex": 52
+      },
+      "dryRun": "PurposeNotAllowed(0x5a1584d7faba43a9baca8c071d9ba2a56db2b16d07eacdf97f5577f764cb25d5, 4)",
+      "cc3Tx": "0xb03abeec480b820bf65f3d64b879d6089b94c0457b21e93ab575a1d42c9714e9",
+      "cc3Block": 5417819,
+      "cc3Status": 0,
+      "gas": "407820"
+    },
+    {
+      "kind": "ok",
+      "hash": "0xac318ba718651bec4fc128ebcdda02e54cb35c085e7923fc047635748a966631",
+      "block": 11619889,
+      "amount": "1000000",
+      "purpose": 1,
+      "proof": {
+        "siblings": 7,
+        "roots": 2,
+        "txIndex": 75
+      },
+      "dryRun": "would settle",
+      "cc3Tx": "0x244d82d2b35b2b7f944d014623555b8cedf60a18c5a7470571888b8a228de28f",
+      "cc3Block": 5417820,
+      "cc3Status": 1,
+      "gas": "451150"
+    },
+    {
+      "kind": "ok",
+      "hash": "0x370a82a12655ae5ebd78a4c0e624a46a268fabcca872e80eae165454847a6730",
+      "block": 11619891,
+      "amount": "1000000",
+      "purpose": 2,
+      "proof": {
+        "siblings": 7,
+        "roots": 10,
+        "txIndex": 76
+      },
+      "dryRun": "would settle",
+      "cc3Tx": "0xa30d3d9986df9a967096f287de30f0609dddf9b863f375ce48e93236f36a260b",
+      "cc3Block": 5417821,
+      "cc3Status": 1,
+      "gas": "454734"
+    },
+    {
+      "kind": "ok",
+      "hash": "0xe2f6838d386158bb76ebf3b66b8c5f43fafacb352da55aca956d4b2ebd4518ff",
+      "block": 11619893,
+      "amount": "1000000",
+      "purpose": 3,
+      "proof": {
+        "siblings": 8,
+        "roots": 8,
+        "txIndex": 75
+      },
+      "dryRun": "would settle",
+      "cc3Tx": "0xed04e56ae69205fcca4e3f61a9f8411559df995bbbc2615d57ca086ac881f2ac",
+      "cc3Block": 5417822,
+      "cc3Status": 1,
+      "gas": "454734"
+    },
+    {
+      "kind": "fail",
+      "hash": "0xf1b9e4f8b09a33411ddd5c2c690bb59988706699ec2410a33edd069f727d0e5a",
+      "block": 11619894,
+      "amount": "1008000000",
+      "purpose": 1,
+      "proof": {
+        "siblings": 7,
+        "roots": 7,
+        "txIndex": 61
+      },
+      "dryRun": "SourceTransactionFailed()",
+      "cc3Tx": "0xc4fbe0e621d1bc692922b8aa6e28f23af284d1b6e31d04b85a1cd0e5ee0dbb4d",
+      "cc3Block": 5417823,
+      "cc3Status": 0,
+      "gas": "352730"
+    },
+    {
+      "kind": "fail",
+      "hash": "0x2e675a908dc6b1f8e48c7b402579c3846445578424ff783cfd3bde14b282e449",
+      "block": 11619895,
+      "amount": "1008000000",
+      "purpose": 2,
+      "proof": {
+        "siblings": 7,
+        "roots": 6,
+        "txIndex": 118
+      },
+      "dryRun": "SourceTransactionFailed()",
+      "cc3Tx": "0xf8531eb4a2f16ec86864df6f0c24f410fc63eec63984fdd1e3f48dd79120a550",
+      "cc3Block": 5417824,
+      "cc3Status": 0,
+      "gas": "352282"
+    },
+    {
+      "kind": "fail",
+      "hash": "0x37ec2d3cf4293f8b0bb1dc26921e4d5f79f18c48a58fdd29c031e20894890ab8",
+      "block": 11619896,
+      "amount": "1008000000",
+      "purpose": 3,
+      "proof": {
+        "siblings": 7,
+        "roots": 5,
+        "txIndex": 74
+      },
+      "dryRun": "SourceTransactionFailed()",
+      "cc3Tx": "0x9c891aeee386bfb6cbf1e4fadd9fcdbd051d27ccad3e2b865747ae9d3d88991d",
+      "cc3Block": 5417825,
+      "cc3Status": 0,
+      "gas": "351834"
+    }
+  ]
+}

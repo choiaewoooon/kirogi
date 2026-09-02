@@ -82,7 +82,19 @@ this instead of a wire.
 <a id="it-ran"></a>
 ## It ran
 
-One remittance, end to end, on public testnets.
+Eleven remittances on public testnets: one first, end to end, then a batch of ten built so that
+some of them **had** to be refused.
+
+| | |
+|---|---|
+| Deposits on Sepolia | **11** — 8 succeeded, 3 made to revert |
+| Settled on Creditcoin | **7** — the school holds **18.000000 KSU** |
+| Refused on Creditcoin, on the explorer | **5** — 4× `SourceTransactionFailed`, 1× `PurposeNotAllowed` |
+| Attestation wait | 7 min 30 s on the first run · 5 min 03 s for the batch |
+| Gas per settlement | 441k–455k · ≈0.00023 CTC at the 0.5 Gcredo the network charged |
+| Dry-run vs. chain | every one of the 10 outcomes was predicted by `eth_call` through the real precompile **before** broadcast |
+
+### The first one
 
 | Step | Result |
 |---|---|
@@ -90,9 +102,30 @@ One remittance, end to end, on public testnets.
 | Attestation wait | **7 min 30 s** (attestors follow finalised blocks, publishing ~every 2 min) |
 | Proof | txIndex 139 · 8 merkle siblings · 4 continuity roots |
 | Verified and settled | [`0x9c0857ec…`](https://creditcoin-testnet.blockscout.com/tx/0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307) · block 5,405,280 · gas **441,364** |
-| School received | **12.000000 KSU** · pool 1,000,000 → 999,988 |
+| School received | **12.000000 KSU** |
 
-Verification cost **0.000664 CTC**.
+### The batch — `scripts/remit.ts` then `scripts/settle_batch.ts`
+
+Seven deposits of 1 USDC with the purpose code cycling tuition → dormitory → books → exam fee,
+and three that ask for more USDC than the wallet holds so `transferFrom` reverts. The school is
+registered for tuition, dormitory and books. Row 4 is the one to look at: a **successful** deposit
+with a **valid** proof, refused because an exam fee is not something this school takes.
+
+| Sepolia deposit | sent for | source | `eth_call` said | Creditcoin | gas |
+|---|---|---|---|---|---|
+| [`0xa40711ce…`](https://eth-sepolia.blockscout.com/tx/0xa40711ceb30249e82e0aec05bc0a378dcd35001c2d828255a38616e15e4a4256) | tuition | ok | would settle | [`0xe58565d2…`](https://creditcoin-testnet.blockscout.com/tx/0xe58565d23fc3a0a4842b11ad868ec8387458c9ad941768fccbd01de5c3b84488) · **settled** · 1.000000 KSU | 453,390 |
+| [`0xdf214d21…`](https://eth-sepolia.blockscout.com/tx/0xdf214d21dc69c0aaa4079e4416b4a3979656cad4fdf95c5c2691d463610afbe7) | dormitory | ok | would settle | [`0xf3837bd6…`](https://creditcoin-testnet.blockscout.com/tx/0xf3837bd622c569b6c9eb75676a198deadd3966689b73d679581557ee3b080b21) · **settled** · 1.000000 KSU | 453,838 |
+| [`0xc0959f86…`](https://eth-sepolia.blockscout.com/tx/0xc0959f865178aa5e7bdaab101bb60e2b55795181d2ca0e6e60c328ff70e1d8fa) | books | ok | would settle | [`0xdcd29a05…`](https://creditcoin-testnet.blockscout.com/tx/0xdcd29a057d1f30c7eb821dcd710aef2e2a7971314ecbaae3df01cfb643470e05) · **settled** · 1.000000 KSU | 453,390 |
+| [`0xae47c57e…`](https://eth-sepolia.blockscout.com/tx/0xae47c57ec4f0ce4c9c4e327eda807d9f6b52890aae2ccedd749f96b1a59365ff) | exam fee | ok | PurposeNotAllowed(0x5a1584d7faba43a9baca8c071d9ba2a56db2b16d07eacdf97f5577f764cb25d5, 4) | [`0xb03abeec…`](https://creditcoin-testnet.blockscout.com/tx/0xb03abeec480b820bf65f3d64b879d6089b94c0457b21e93ab575a1d42c9714e9) · **refused** `PurposeNotAllowed` — school takes tuition · dormitory · books | 407,820 |
+| [`0xac318ba7…`](https://eth-sepolia.blockscout.com/tx/0xac318ba718651bec4fc128ebcdda02e54cb35c085e7923fc047635748a966631) | tuition | ok | would settle | [`0x244d82d2…`](https://creditcoin-testnet.blockscout.com/tx/0x244d82d2b35b2b7f944d014623555b8cedf60a18c5a7470571888b8a228de28f) · **settled** · 1.000000 KSU | 451,150 |
+| [`0x370a82a1…`](https://eth-sepolia.blockscout.com/tx/0x370a82a12655ae5ebd78a4c0e624a46a268fabcca872e80eae165454847a6730) | dormitory | ok | would settle | [`0xa30d3d99…`](https://creditcoin-testnet.blockscout.com/tx/0xa30d3d9986df9a967096f287de30f0609dddf9b863f375ce48e93236f36a260b) · **settled** · 1.000000 KSU | 454,734 |
+| [`0xe2f6838d…`](https://eth-sepolia.blockscout.com/tx/0xe2f6838d386158bb76ebf3b66b8c5f43fafacb352da55aca956d4b2ebd4518ff) | books | ok | would settle | [`0xed04e56a…`](https://creditcoin-testnet.blockscout.com/tx/0xed04e56ae69205fcca4e3f61a9f8411559df995bbbc2615d57ca086ac881f2ac) · **settled** · 1.000000 KSU | 454,734 |
+| [`0xf1b9e4f8…`](https://eth-sepolia.blockscout.com/tx/0xf1b9e4f8b09a33411ddd5c2c690bb59988706699ec2410a33edd069f727d0e5a) | tuition | reverted | SourceTransactionFailed() | [`0xc4fbe0e6…`](https://creditcoin-testnet.blockscout.com/tx/0xc4fbe0e621d1bc692922b8aa6e28f23af284d1b6e31d04b85a1cd0e5ee0dbb4d) · **refused** `SourceTransactionFailed` | 352,730 |
+| [`0x2e675a90…`](https://eth-sepolia.blockscout.com/tx/0x2e675a908dc6b1f8e48c7b402579c3846445578424ff783cfd3bde14b282e449) | dormitory | reverted | SourceTransactionFailed() | [`0xf8531eb4…`](https://creditcoin-testnet.blockscout.com/tx/0xf8531eb4a2f16ec86864df6f0c24f410fc63eec63984fdd1e3f48dd79120a550) · **refused** `SourceTransactionFailed` | 352,282 |
+| [`0x37ec2d3c…`](https://eth-sepolia.blockscout.com/tx/0x37ec2d3cf4293f8b0bb1dc26921e4d5f79f18c48a58fdd29c031e20894890ab8) | books | reverted | SourceTransactionFailed() | [`0x9c891aee…`](https://creditcoin-testnet.blockscout.com/tx/0x9c891aeee386bfb6cbf1e4fadd9fcdbd051d27ccad3e2b865747ae9d3d88991d) · **refused** `SourceTransactionFailed` | 351,834 |
+
+The refusals cost gas because they were broadcast on purpose — a refusal that only exists in a
+log line is not evidence. Source: `fixtures/batch-2026-09-02-settled.json`.
 
 ### Deployed
 
@@ -120,10 +153,12 @@ Verification cost **0.000664 CTC**.
 | Send the canonical token somewhere other than the treasury | `NoCanonicalTransfer()` | `test/Kirogi.t.sol` |
 | Present a proof the verifier rejects | `Proof of inclusion verification failed` | `test/Kirogi.t.sol` |
 | Redirect a proof to a different settlement partner | unrelated partner receives 0 | `test/FullFlow.t.sol` |
-| Prove a *successful* remittance sent for a purpose the school does not accept | `PurposeNotAllowed(beneficiary, 1)` | `test/FullFlow.t.sol` — real proof, real receipt |
+| Prove a *successful* remittance sent for a purpose the school does not accept | `PurposeNotAllowed(beneficiary, 4)` | **on-chain** — [`0xb03abeec…`](https://creditcoin-testnet.blockscout.com/tx/0xb03abeec480b820bf65f3d64b879d6089b94c0457b21e93ab575a1d42c9714e9), and `test/FullFlow.t.sol` with the real proof |
 
-The first row is not a unit test. A real Sepolia remittance was made to revert, a real valid proof
-of it was submitted to the live contract, and Creditcoin returned `0xc60cdba1`.
+The first and last rows are not unit tests. A real Sepolia remittance was made to revert, a real
+valid proof of it was submitted to the live contract, and Creditcoin returned `0xc60cdba1` — four
+times now. And a real, successful remittance sent for an exam fee was refused by a school
+registered for tuition, dormitory and books. Both refusals are on the explorer.
 
 Tests replay **real captured proofs** rather than fixtures we invented — `fixtures/*.json` hold
 actual `txBytes`, merkle and continuity proofs pulled from the prover. That keeps the ~7 minute
