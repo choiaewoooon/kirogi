@@ -241,7 +241,7 @@ scripts/
   remit.ts                Batch remittances on Sepolia, including ones meant to fail.
   settle_batch.ts         Attest once, dry-run each, broadcast each — refusals included.
 test/                     24 tests, real proof fixtures.
-web/                      Next.js. Overview, live evidence page, proof tracker (with purpose check).
+web/                      Next.js. Overview, live evidence, proof tracker (purpose check), send page (own wallet).
 deck/                     Slides, and the Chrome-headless build that makes the PDF.
 docs/                     GitHub Pages: demo video, deck, the exported site under /app.
 ```

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { DEPLOYMENT as D } from "@/lib/deployment";
 import { Contract, Interface, JsonRpcProvider } from "ethers";
-import { findReceipt } from "@/lib/rpc";
+import { findReceipt, SOURCE_RPCS, MAINNET_RPCS } from "@/lib/rpc";
 
 const GATEWAY_EVENTS = new Interface([
   "event RemittanceSent(address indexed sender, bytes32 indexed beneficiaryId, uint256 amount, uint16 purposeCode)",
@@ -17,6 +17,8 @@ const PROVER = "https://prover.cc3-testnet.creditcoin.network";
 
 export function Tracker() {
   const [hash, setHash] = useState<string>(D.proven.sourceTx);
+  const [chain, setChain] = useState<"source" | "mainnet">("source");
+  const src = D[chain];
   const [stages, setStages] = useState<Stage[] | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -25,9 +27,9 @@ export function Tracker() {
     setBusy(true);
     const out: Stage[] = [];
     try {
-      const receipt = await findReceipt(hash);
+      const receipt = await findReceipt(hash, chain === "mainnet" ? MAINNET_RPCS : SOURCE_RPCS);
       if (!receipt) {
-        setStages([{ name: "On Ethereum", state: "fail", detail: "No transaction with that hash on Sepolia." }]);
+        setStages([{ name: "On Ethereum", state: "fail", detail: `No transaction with that hash on ${src.name}.` }]);
         return;
       }
       out.push({
@@ -47,7 +49,7 @@ export function Tracker() {
         return;
       }
       const sent = receipt.logs
-        .filter((l) => l.address.toLowerCase() === D.source.gateway.toLowerCase())
+        .filter((l) => src.gateway && l.address.toLowerCase() === src.gateway.toLowerCase())
         .map((l) => { try { return GATEWAY_EVENTS.parseLog({ topics: [...l.topics], data: l.data }); } catch { return null; } })
         .find((e) => e?.name === "RemittanceSent");
       if (sent) {
@@ -66,7 +68,7 @@ export function Tracker() {
         out.push({ name: "Purpose", state: "fail", detail: "No RemittanceSent log from the Kirogi gateway in this transaction" });
       }
 
-      const res = await fetch(`${PROVER}/api/v1/attested-height/${D.source.chainKey}`);
+      const res = await fetch(`${PROVER}/api/v1/attested-height/${src.chainKey}`);
       const attested = Number((await res.json()).attestedHeight);
       const behind = receipt.blockNumber - attested;
       out.push({
@@ -79,7 +81,7 @@ export function Tracker() {
       });
 
       if (behind <= 0) {
-        const p = await fetch(`${PROVER}/api/v1/proof-by-tx/${D.source.chainKey}/${hash}`);
+        const p = await fetch(`${PROVER}/api/v1/proof-by-tx/${src.chainKey}/${hash}`);
         if (p.ok) {
           const proof = await p.json();
           out.push({
@@ -104,8 +106,16 @@ export function Tracker() {
   return (
     <div className="tracker">
       <form onSubmit={check} className="tracker__form">
+        <div className="tracker__row" style={{ marginBottom: "0.9rem" }}>
+          {(["source", "mainnet"] as const).map((k) => (
+            <button type="button" key={k} className={`btn ${chain === k ? "btn--primary" : "btn--ghost"}`}
+              onClick={() => { setChain(k); setStages(null); }}>
+              {D[k].name} · chainKey {D[k].chainKey}
+            </button>
+          ))}
+        </div>
         <label className="tracker__label" htmlFor="tx">
-          Sepolia transaction hash
+          {src.name} transaction hash
         </label>
         <div className="tracker__row">
           <input

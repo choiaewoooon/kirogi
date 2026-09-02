@@ -16,6 +16,12 @@ export const SOURCE_RPCS = [
   "https://1rpc.io/sepolia",            // fine for receipts; refused eth_getBalance on the free tier
 ] as const;
 
+export const MAINNET_RPCS = [
+  "https://ethereum-rpc.publicnode.com",
+  "https://eth.llamarpc.com",
+  "https://1rpc.io/eth",
+] as const;
+
 export const SETTLEMENT_RPCS = ["https://rpc.cc3-testnet.creditcoin.network"] as const;
 
 /** First endpoint that actually has the receipt wins; null only if none of them do. */
