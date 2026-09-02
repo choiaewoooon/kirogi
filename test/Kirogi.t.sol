@@ -136,6 +136,23 @@ contract KirogiASCTest is FixtureTest {
         asc.configureSource(3, 3, GATEWAY, CIRCLE_USDC_SEPOLIA, fixtureTo);
     }
 
+    /// Sepolia and mainnet live side by side as two actions of the same contract, each with
+    /// its own gateway, token and treasury — what the live deployment does.
+    function test_TwoSourceChainsCoexist() public {
+        address mainnetGateway = address(0x53B9);
+        address mainnetUsdc = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+        asc.configureSource(ETH_SEPOLIA, 1, GATEWAY, CIRCLE_USDC_SEPOLIA, fixtureTo);
+        asc.configureSource(2, 3, mainnetGateway, mainnetUsdc, address(0x7EA5));
+        assertTrue(asc.gatewayRegistered(GATEWAY));
+        assertTrue(asc.gatewayRegistered(mainnetGateway));
+        (uint64 k1,,,,) = asc.sourceConfigs(ETH_SEPOLIA);
+        (uint64 k2, address g2, address t2,,) = asc.sourceConfigs(2);
+        assertEq(k1, 1);
+        assertEq(k2, 3);
+        assertEq(g2, mainnetGateway);
+        assertEq(t2, mainnetUsdc);
+    }
+
     function test_ReconfiguringSameActionReleasesOldGateway() public {
         asc.configureSource(ETH_SEPOLIA, 1, GATEWAY, CIRCLE_USDC_SEPOLIA, fixtureTo);
         asc.configureSource(ETH_SEPOLIA, 1, address(0xBEEF), CIRCLE_USDC_SEPOLIA, fixtureTo);

@@ -258,10 +258,18 @@ chainKey 3   Ethereum          (chainId 1)
 chainKey 1   Sepolia ethereum  (chainId 11155111)
 ```
 
+Both are configured on the live `KirogiASC`, as two actions of one contract:
+
+| action | chainKey | gateway | token |
+|---|---|---|---|
+| 1 | 1 (Sepolia) | `0x1C2152e3…9Ab053` | Circle USDC (Sepolia) |
+| 2 | 3 (Ethereum mainnet) | [`0x53B98C34…907f2E`](https://eth.blockscout.com/address/0x53B98C348b9B2E8aDf43dFd07025Ed49de907f2E) | Circle USDC (mainnet) |
+
 `KirogiASC` keeps gateway, token and treasury addresses in a `sourceConfigs` mapping keyed by
 action, with gateway addresses forced unique across configs. **Adding a chain Attestcoin
-supports later is a `configureSource()` call, not a rewrite.** The frontend renders the list by
-calling `getSupportedChains()` rather than hardcoding it.
+supports later is a `configureSource()` call, not a rewrite** — the mainnet leg above was exactly
+that: one gateway deployment, one call, no change to the verifier or the pool. The frontend
+renders the list by calling `getSupportedChains()` rather than hardcoding it.
 
 <a id="what-this-does-not-claim"></a>
 ## What this does not claim
