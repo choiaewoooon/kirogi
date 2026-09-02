@@ -134,6 +134,9 @@ log line is not evidence. Source: `fixtures/batch-2026-09-02-settled.json`.
 | `RemittanceGateway` | Sepolia | [`0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053`](https://sepolia.etherscan.io/address/0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053) |
 | Treasury (provider inventory) | Sepolia | [`0x86CF30f751e0138A3272e3A148eF59Fd77C7366F`](https://sepolia.etherscan.io/address/0x86CF30f751e0138A3272e3A148eF59Fd77C7366F) |
 | Circle USDC | Sepolia | [`0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`](https://sepolia.etherscan.io/address/0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238) |
+| `RemittanceGateway` (mainnet) | **Ethereum** | [`0x53B98C348b9B2E8aDf43dFd07025Ed49de907f2E`](https://eth.blockscout.com/address/0x53B98C348b9B2E8aDf43dFd07025Ed49de907f2E) — verified source, action 2 / chainKey 3 |
+| Treasury (mainnet) | Ethereum | [`0x5b0cCA1E5AA5CD83FdD7CCAf37454f00A87F08Bf`](https://eth.blockscout.com/address/0x5b0cCA1E5AA5CD83FdD7CCAf37454f00A87F08Bf) |
+| Circle USDC (mainnet) | Ethereum | [`0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`](https://eth.blockscout.com/address/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48) |
 | **`KirogiASC`** | Creditcoin CC3 | [`0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45`](https://creditcoin-testnet.blockscout.com/address/0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45) |
 | `SettlementPool` v2 (purpose enforcement) | Creditcoin CC3 | [`0xC471E417383C01c0053F79660224428Edd37e8e3`](https://creditcoin-testnet.blockscout.com/address/0xC471E417383C01c0053F79660224428Edd37e8e3) |
 | `SettlementPool` v1 (first settlement, drained) | Creditcoin CC3 | [`0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98`](https://creditcoin-testnet.blockscout.com/address/0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98) |
