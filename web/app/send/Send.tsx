@@ -6,17 +6,29 @@ import {
   useAccount, useConnect, useDisconnect, useSwitchChain, useReadContract,
   useWriteContract, usePublicClient,
 } from "wagmi";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useFundWallet } from "@privy-io/react-auth";
+import { MyRemittances } from "./MyRemittances";
 
-/** Only mounted when a Privy app id is configured, so the hook always has its provider. */
-function PrivyAuth({ signedIn }: { signedIn: boolean }) {
-  const { login, logout } = usePrivy();
-  return signedIn
-    ? <button type="button" className="btn btn--ghost" onClick={() => logout()}>Sign out</button>
-    : <button type="button" className="btn btn--primary" onClick={() => login()}>Sign in — email, Google or a wallet</button>;
+/** Only mounted when a Privy app id is configured, so the hooks always have their provider. */
+function PrivyIdentity({ address, chainId, short: shortAmount }: { address?: Address; chainId?: number; short: boolean }) {
+  const { user, logout } = usePrivy();
+  const { fundWallet } = useFundWallet();
+  const who = user?.email?.address ?? user?.google?.email ?? "signed in";
+  return (
+    <>
+      <span className="btn btn--ghost mono" style={{ cursor: "default" }}>{who}{address ? ` · ${short(address)}` : ""}</span>
+      {address && shortAmount && (
+        <button type="button" className="btn btn--primary" onClick={() => fundWallet({ address, options: { chain: chainId === 1 ? mainnet : sepolia, asset: "USDC" } })}>
+          Add USDC to this wallet
+        </button>
+      )}
+      <button type="button" className="btn btn--ghost" onClick={() => logout()}>Sign out</button>
+    </>
+  );
 }
 import { DEPLOYMENT as D } from "@/lib/deployment";
 import { PRIVY_APP_ID, cc3 } from "@/lib/wagmi";
+import { mainnet, sepolia } from "wagmi/chains";
 
 /**
  * The parent's side. Two transactions on the source chain — approve the gateway for exactly
@@ -120,15 +132,15 @@ export function Send() {
   return (
     <div className="tracker">
       <form onSubmit={go} className="tracker__form">
-        <label className="tracker__label">Wallet</label>
+        <label className="tracker__label">{PRIVY_APP_ID ? "Signed in as" : "Wallet"}</label>
         <div className="tracker__row" style={{ marginBottom: "1rem", flexWrap: "wrap" }}>
-          {isConnected && address ? (
+          {PRIVY_APP_ID ? (
+            <PrivyIdentity address={address} chainId={cfg.chainId} short={balance !== undefined && balance < wei} />
+          ) : isConnected && address ? (
             <>
               <span className="btn btn--ghost mono" style={{ cursor: "default" }}>{short(address)}{chainId ? ` · chain ${chainId}` : ""}</span>
-              {PRIVY_APP_ID ? <PrivyAuth signedIn /> : <button type="button" className="btn btn--ghost" onClick={() => disconnect()}>Disconnect</button>}
+              <button type="button" className="btn btn--ghost" onClick={() => disconnect()}>Disconnect</button>
             </>
-          ) : PRIVY_APP_ID ? (
-            <PrivyAuth signedIn={false} />
           ) : connectors.length ? (
             connectors.map((c) => (
               <button type="button" key={c.uid} className="btn btn--primary" disabled={connecting} onClick={() => connect({ connector: c })}>
@@ -167,6 +179,13 @@ export function Send() {
           Gateway <span className="mono">{gateway ? short(gateway) : "—"}</span> · approve is for the exact amount, never unlimited.
         </p>
       </form>
+
+      {address && (
+        <>
+          <p className="eyebrow" style={{ marginTop: "2.5rem" }}>Sent from this wallet</p>
+          <MyRemittances address={address} />
+        </>
+      )}
 
       {steps && (
         <ol className="tracker__stages">

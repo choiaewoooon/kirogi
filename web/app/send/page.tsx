@@ -1,4 +1,5 @@
 import { Send } from "./Send";
+import { SendGuard } from "./SendGuard";
 
 export const metadata = { title: "Send a remittance — Kirogi" };
 
@@ -16,7 +17,7 @@ export default function SendPage() {
           is paid there only once the Attestcoin proof of this deposit is verified, and only if the
           purpose you chose is one the school accepts.
         </p>
-        <Send />
+        <SendGuard><Send /></SendGuard>
       </section>
     </main>
   );

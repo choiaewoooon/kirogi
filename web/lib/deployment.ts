@@ -8,6 +8,7 @@ export const DEPLOYMENT = {
     rpc: "https://ethereum-sepolia-rpc.publicnode.com",
     explorer: "https://sepolia.etherscan.io",
     gateway: "0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053",
+    deployBlock: 11604751,                        // first block worth scanning for RemittanceSent
     usdc: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
     treasury: "0x86CF30f751e0138A3272e3A148eF59Fd77C7366F",
   },
@@ -20,6 +21,7 @@ export const DEPLOYMENT = {
     rpc: "https://ethereum-rpc.publicnode.com",
     explorer: "https://eth.blockscout.com",
     gateway: "0x53B98C348b9B2E8aDf43dFd07025Ed49de907f2E",
+    deployBlock: 25890193,
     usdc: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     treasury: "0x5b0cCA1E5AA5CD83FdD7CCAf37454f00A87F08Bf",
   },
