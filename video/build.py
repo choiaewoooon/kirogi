@@ -31,6 +31,8 @@ SCENES = [
     ("still", "23-purpose",  7.0),    # the other refusal: valid proof, wrong purpose
     ("still", "22-tests",    4.5),
     ("clip",  "track",       None),   # somebody actually using it
+    ("still", "09-mainnet",  4.5),    # the leg that is real money
+    ("still", "14-mainnet",  5.0),
     ("still", "13-evidence", 4.5),
     ("still", "08-close",    4.5),
 ]

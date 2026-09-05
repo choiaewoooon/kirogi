@@ -32,6 +32,7 @@ SHOTS = [
     ("11-settle",   "Creditcoin CC3",       "creditcoin-testnet.blockscout.com &middot; the settlement"),
     ("12-school",   "The school&rsquo;s wallet", "18 KSU across seven settlements &middot; not the parent&rsquo;s, not ours"),
     ("13-evidence", "Live contract state",  "read straight from both chains"),
+    ("14-mainnet",  "Ethereum mainnet",     "eth.blockscout.com &middot; 1 USDC from an email sign-in, real Circle USDC"),
 ]
 
 pathlib.Path("frames/raw").mkdir(parents=True, exist_ok=True)

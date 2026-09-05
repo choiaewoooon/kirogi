@@ -58,3 +58,9 @@ card("08-close",
      '<p style="font-family:var(--mono);font-size:22px;color:var(--text-faint);margin-top:44px">'
      'KIROGI &middot; BUIDL CTC 2026 FALL</p>', "center")
 print("done")
+
+card("09-mainnet",
+     step("Real money",
+          "One of them was real.",
+          "A parent signed in with an email, got a wallet, and sent 1 USDC on Ethereum mainnet. "
+          "Creditcoin proved it and paid the school. Same contract, second source."))
