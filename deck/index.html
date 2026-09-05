@@ -114,17 +114,17 @@
 <!-- 6 evidence -->
 <section class="slide">
   <p class="eyebrow">It ran</p>
-  <h1 class="h-lg" style="max-width:22ch">Eleven remittances, on public testnets, some built to be refused.</h1>
+  <h1 class="h-lg" style="max-width:24ch">Twelve remittances. One of them real money.</h1>
   <div class="grid3 compact" style="margin-top:22px">
-    <div class="card"><p class="stat num">11<small>deposits on Sepolia · 8 succeeded, 3 made to revert</small></p></div>
-    <div class="card"><p class="stat num">7<small>settled on Creditcoin · the school holds 18 KSU</small></p></div>
+    <div class="card"><p class="stat num">12<small>deposits · 11 on Sepolia, 1 real USDC on Ethereum mainnet</small></p></div>
+    <div class="card"><p class="stat num">8<small>settled on Creditcoin · the school holds 19 KSU</small></p></div>
     <div class="card"><p class="stat num">5<small>refused on-chain · 4 reverted deposits, 1 wrong purpose</small></p></div>
   </div>
   <table class="tight" style="margin-top:16px;font-size:13px">
     <tr><th style="width:34%">Artifact</th><th>Address / hash</th></tr>
     <tr><td><b>First deposit → settlement</b></td><td class="mono">0x0a31dd52…c02e2b → 0x9c0857ec…550307 · 7m30s wait · gas 441,364</td></tr>
+    <tr><td><b>Mainnet, real USDC</b> <span class="small">email sign-in, embedded wallet</span></td><td class="mono">0x2d7142ba…37da04 → 0x9ed88459…276a47 · 1 USDC · block 5,433,955</td></tr>
     <tr><td><b>Exam fee, refused</b> <span class="small">valid proof, status 1</span></td><td class="mono">0xae47c57e…365ff → 0xb03abeec…9714e9 · PurposeNotAllowed · block 5,417,819</td></tr>
-    <tr><td><b>Reverted deposit, refused</b></td><td class="mono">0xf1b9e4f8…7d0e5a → 0xc4fbe0e6…0dbb4d · SourceTransactionFailed</td></tr>
     <tr><td><b>KirogiASC</b> · <b>Pool v2</b></td><td class="mono">0x4Ea7D8d6…cFcD45 · 0xC471E417…37e8e3</td></tr>
   </table>
   <p class="lede" style="margin-top:6px;font-size:14px;max-width:88ch">
@@ -151,7 +151,7 @@
         <td><span class="tag no">PurposeNotAllowed()</span><br><span class="mono" style="font-size:11px">block 5,417,819</span></td><td><span class="tag live">on-chain</span></td></tr>
   </table>
   <p class="lede" style="margin-top:16px;font-size:18px;max-width:72ch">
-    <b>24 tests pass, and the same proofs run unmocked through the real precompile by
+    <b>26 tests pass, and the same proofs run unmocked through the real precompile by
     <span class="mono">eth_call</span>.</b> Two rows happened on the live network: a reverted
     Sepolia deposit, and a successful one sent for a purpose the school does not take. Both
     carried valid proofs. Both were refused.

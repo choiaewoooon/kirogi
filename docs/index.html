@@ -43,10 +43,11 @@ to say the money arrived. No hardware, no merchant integration: one registered w
   <a href="https://github.com/choiaewoooon/kirogi#readme"><small>Technical doc</small>How Attestcoin is used, and what it does not claim</a>
 </div>
 
-<h2>It ran — 11 deposits, 7 settled, 5 refused on-chain. Every hash is public</h2>
+<h2>It ran — 12 deposits (one on Ethereum mainnet), 8 settled, 5 refused on-chain. Every hash is public</h2>
 <table>
 <tr><td>Deposit on Sepolia</td><td><a href="https://eth-sepolia.blockscout.com/tx/0x0a31dd52776f8d656cc5be3178a367f8283584e2cd7396038880dfb0b2c02e2b">0x0a31dd52…c02e2b</a> — 12 USDC, <span class="ok">success</span></td></tr>
 <tr><td>Settlement on Creditcoin</td><td><a href="https://creditcoin-testnet.blockscout.com/tx/0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307">0x9c0857ec…550307</a> — 12 KSU to the school, <span class="ok">success</span></td></tr>
+<tr><td>Ethereum mainnet, real USDC</td><td><a href="https://eth.blockscout.com/tx/0x2d7142baee3a4111f426efa434c33192e112ed9f77c32069efa369d50837da04">0x2d7142ba…37da04</a> → <a href="https://creditcoin-testnet.blockscout.com/tx/0x9ed884596e1c04c8af1e7413f4449a313272f2b7b4e7413153ee292689276a47">0x9ed88459…276a47</a> — 1 USDC sent from an email-login embedded wallet, proven and settled (block 5,433,955)</td></tr>
 <tr><td>Exam fee, refused</td><td><a href="https://creditcoin-testnet.blockscout.com/tx/0xb03abeec480b820bf65f3d64b879d6089b94c0457b21e93ab575a1d42c9714e9">0xb03abeec…9714e9</a> — deposit succeeded, proof valid, school takes tuition · dormitory · books → <span class="no">PurposeNotAllowed()</span></td></tr>
 <tr><td>The batch</td><td>10 deposits → 6 settled, 4 refused on-chain; every outcome predicted by <code>eth_call</code> through the real precompile first — <a href="https://github.com/choiaewoooon/kirogi/blob/main/fixtures/batch-2026-09-02-settled.json">fixtures/batch-2026-09-02-settled.json</a></td></tr>
 <tr><td>A reverted deposit, refused</td><td><a href="https://eth-sepolia.blockscout.com/tx/0xb17c17de63ce94d14534aa610212f41f6fc6f54ec01f06fa3e976c67482606e0">0xb17c17de…2606e0</a> — proof valid, tx included, status 0 → <span class="no">SourceTransactionFailed()</span></td></tr>

@@ -82,13 +82,15 @@ this instead of a wire.
 <a id="it-ran"></a>
 ## It ran
 
-Eleven remittances on public testnets: one first, end to end, then a batch of ten built so that
-some of them **had** to be refused.
+Twelve remittances: one first, end to end, on testnets; a batch of ten built so that some of
+them **had** to be refused; and one on **Ethereum mainnet** — real Circle USDC, sent by a person
+who signed in with an email, from the wallet that sign-in created.
 
 | | |
 |---|---|
 | Deposits on Sepolia | **11** — 8 succeeded, 3 made to revert |
-| Settled on Creditcoin | **7** — the school holds **18.000000 KSU** |
+| Deposits on Ethereum mainnet | **1** — 1.000000 USDC, from a Privy embedded wallet |
+| Settled on Creditcoin | **8** — the school holds **19.000000 KSU** |
 | Refused on Creditcoin, on the explorer | **5** — 4× `SourceTransactionFailed`, 1× `PurposeNotAllowed` |
 | Attestation wait | 7 min 30 s on the first run · 5 min 03 s for the batch |
 | Gas per settlement | 441k–455k · ≈0.00023 CTC at the 0.5 Gcredo the network charged |
@@ -124,6 +126,23 @@ with a **valid** proof, refused because an exam fee is not something this school
 | [`0x2e675a90…`](https://eth-sepolia.blockscout.com/tx/0x2e675a908dc6b1f8e48c7b402579c3846445578424ff783cfd3bde14b282e449) | dormitory | reverted | SourceTransactionFailed() | [`0xf8531eb4…`](https://creditcoin-testnet.blockscout.com/tx/0xf8531eb4a2f16ec86864df6f0c24f410fc63eec63984fdd1e3f48dd79120a550) · **refused** `SourceTransactionFailed` | 352,282 |
 | [`0x37ec2d3c…`](https://eth-sepolia.blockscout.com/tx/0x37ec2d3cf4293f8b0bb1dc26921e4d5f79f18c48a58fdd29c031e20894890ab8) | books | reverted | SourceTransactionFailed() | [`0x9c891aee…`](https://creditcoin-testnet.blockscout.com/tx/0x9c891aeee386bfb6cbf1e4fadd9fcdbd051d27ccad3e2b865747ae9d3d88991d) · **refused** `SourceTransactionFailed` | 351,834 |
 
+### Ethereum mainnet — the one that is real money
+
+No faucet, no test token. A person signed in to the [send page](https://choiaewoooon.github.io/kirogi/app/send/)
+with an email address, got an embedded wallet, funded it with 2 USDC, and sent 1 USDC for tuition.
+The same `KirogiASC` read it as action 2 / chainKey 3 and paid the school.
+
+| Step | Result |
+|---|---|
+| Deposit on Ethereum | [`0x2d7142ba…`](https://eth.blockscout.com/tx/0x2d7142baee3a4111f426efa434c33192e112ed9f77c32069efa369d50837da04) · block 25,910,076 · **1.000000 USDC** · status `0x1` · fee 0.000004 ETH |
+| Gateway | [`0x53B98C34…`](https://eth.blockscout.com/address/0x53B98C348b9B2E8aDf43dFd07025Ed49de907f2E) — source-verified, ownerless |
+| Attestation wait | ~6 min (frontier followed at 26 blocks behind head) |
+| Proof | txIndex 203 · 8 merkle siblings · 5 continuity roots |
+| Verified and settled | [`0x9ed88459…`](https://creditcoin-testnet.blockscout.com/tx/0x9ed884596e1c04c8af1e7413f4449a313272f2b7b4e7413153ee292689276a47) · block 5,433,955 · gas **453,390** |
+| School received | **1.000000 KSU** → 19.000000 total, 7 settlements on the v2 pool |
+
+That proof is `fixtures/mainnet-flow.json`, and `test_SettlesRealMainnetRemittance` replays it.
+
 The refusals cost gas because they were broadcast on purpose — a refusal that only exists in a
 log line is not evidence. Source: `fixtures/batch-2026-09-02-settled.json`.
 
@@ -146,7 +165,7 @@ log line is not evidence. Source: `fixtures/batch-2026-09-02-settled.json`.
 <a id="what-it-refuses"></a>
 ## What it refuses
 
-`forge test` — **24 passing**. Then the same proofs, unmocked, against the real precompile.
+`forge test` — **26 passing**. Then the same proofs, unmocked, against the real precompile.
 
 | Attempt | Result | Where |
 |---|---|---|
@@ -192,7 +211,7 @@ attestation or checkpoint`), so the worker never reuses one; it rebuilds at sett
 ```bash
 npm install
 forge build
-forge test          # 24 passing, no network needed
+forge test          # 26 passing, no network needed
 ```
 
 Tests need no RPC, no faucet and no wallet: they mock the `0x0FD2` precompile with
@@ -243,7 +262,7 @@ scripts/
   live_check.ts           eth_call the real precompile. Nothing mocked, nothing spent.
   remit.ts                Batch remittances on Sepolia, including ones meant to fail.
   settle_batch.ts         Attest once, dry-run each, broadcast each — refusals included.
-test/                     24 tests, real proof fixtures.
+test/                     26 tests, real proof fixtures (Sepolia and mainnet).
 web/                      Next.js. Overview, live evidence, proof tracker (purpose check), send page (own wallet).
 deck/                     Slides, and the Chrome-headless build that makes the PDF.
 docs/                     GitHub Pages: demo video, deck, the exported site under /app.

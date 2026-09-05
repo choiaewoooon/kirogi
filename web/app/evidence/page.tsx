@@ -79,7 +79,8 @@ export default function Evidence() {
 Check it yourself.
         </h1>
         <p className="lede" style={{ marginTop: "1.5rem" }}>
-Eleven remittances were sent. Seven were proven and settled — the school holds 18 KSU. Five
+Twelve remittances were sent, one of them real USDC on Ethereum mainnet from an email
+            sign-in. Eight were proven and settled — the school holds 19 KSU. Five
             were refused on-chain: four because the deposit reverted on Ethereum, one because it was
             sent for an exam fee and this school is registered for tuition, dormitory and books. Every
             hash is on a public explorer, along with every address below. The remaining refusals are

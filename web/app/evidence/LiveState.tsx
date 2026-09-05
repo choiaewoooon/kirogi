@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Contract, formatUnits } from "ethers";
 import { DEPLOYMENT as D } from "@/lib/deployment";
-import { read, SOURCE_RPCS, SETTLEMENT_RPCS } from "@/lib/rpc";
+import { read, SOURCE_RPCS, MAINNET_RPCS, SETTLEMENT_RPCS } from "@/lib/rpc";
 
 const ERC20 = ["function balanceOf(address) view returns (uint256)"];
 const POOL = [
@@ -28,7 +28,7 @@ export function LiveState() {
     let cancelled = false;
     (async () => {
       try {
-        const [school, liquidity, settled, treasury, count, mask] = await Promise.all([
+        const [school, liquidity, settled, treasury, count, mask, treasuryMain] = await Promise.all([
           read(SETTLEMENT_RPCS, (p) =>
             new Contract(D.settlement.token, ERC20, p).balanceOf(D.settlement.partner)),
           read(SETTLEMENT_RPCS, (p) =>
@@ -41,6 +41,9 @@ export function LiveState() {
             new Contract(D.settlement.pool, POOL, p).settlementCountOf(D.settlement.beneficiaryId)),
           read(SETTLEMENT_RPCS, (p) =>
             new Contract(D.settlement.pool, POOL, p).allowedPurposesOf(D.settlement.beneficiaryId)),
+          D.mainnet.treasury
+            ? read(MAINNET_RPCS, (p) => new Contract(D.mainnet.usdc, ERC20, p).balanceOf(D.mainnet.treasury))
+            : Promise.resolve(0n),
         ]);
 
         if (cancelled) return;
@@ -51,6 +54,8 @@ export function LiveState() {
           { label: "Liquidity remaining", value: `${formatUnits(liquidity, 6)} KSU` },
           { label: "Settlements for this beneficiary", value: `${Number(count)} proven` },
           { label: "This school accepts", value: purposesOf(Number(mask)) },
+          { label: "Treasury holds (Ethereum mainnet)", value: `${formatUnits(treasuryMain, 6)} USDC` },
+          { label: "Source chains", value: "Sepolia · Ethereum" },
         ]);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "RPC unreachable");
@@ -72,7 +77,7 @@ export function LiveState() {
 
   return (
     <div className="live">
-      {(rows ?? Array.from({ length: 6 }, () => null)).map((r, i) => (
+      {(rows ?? Array.from({ length: 8 }, () => null)).map((r, i) => (
         <div className="live__cell" key={r?.label ?? i}>
           <p className="live__label">{r?.label ?? " "}</p>
           <p className="live__value">{r ? r.value : "reading…"}</p>

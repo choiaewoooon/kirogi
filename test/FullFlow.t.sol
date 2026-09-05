@@ -91,6 +91,27 @@ contract FullFlowTest is Test {
         );
     }
 
+    /// Same contract, second source. A real 1 USDC remittance on Ethereum mainnet — sent from a
+    /// Privy embedded wallet by a person who signed in with an email — proven and settled here.
+    function test_SettlesRealMainnetRemittance() public {
+        uint8 mainnetAction = 2;
+        address mainnetGateway = 0x53B98C348b9B2E8aDf43dFd07025Ed49de907f2E;
+        address mainnetUsdc = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+        address mainnetTreasury = 0x5b0cCA1E5AA5CD83FdD7CCAf37454f00A87F08Bf;
+        asc.configureSource(mainnetAction, 3, mainnetGateway, mainnetUsdc, mainnetTreasury);
+
+        Fixture memory f = _load("mainnet-flow");
+        assertEq(f.chainKey, 3, "fixture is from chainKey 3");
+        uint256 before = token.balanceOf(partner);
+
+        asc.execute(
+            mainnetAction, f.chainKey, f.height, f.txBytes, f.merkleRoot, f.siblings, f.lowerEndpointDigest, f.continuityRoots
+        );
+
+        assertEq(token.balanceOf(partner) - before, 1e6, "1 USDC on mainnet -> 1 KSU to the school");
+        assertEq(pool.settlementCountOf(beneficiaryId), 1);
+    }
+
     /// The whole point, end to end: a proven Ethereum remittance pays a settlement partner
     /// on Creditcoin. Value never crossed a bridge -- only the fact did.
     function test_SettlesRealRemittanceToPartner() public {
