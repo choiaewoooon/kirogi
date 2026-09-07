@@ -30,6 +30,30 @@ side settles, and whoever fronts that money does it because an operator said the
 A contract on the receiving chain cannot see a deposit on Ethereum. It can only be told — by a
 bridge, an oracle, or a company.
 
+## Who this is for, and who it is not for
+
+Kirogi is a **purpose-bound remittance**: the sender names what the money is for, and the receiver
+is paid only for purposes it has registered to accept. That is the product, not the plumbing.
+
+It is *not* aimed at a parent in Seoul paying a university in Boston. That corridor already has
+Flywire, local virtual accounts and a card desk; a fintech app wins there on convenience, and an
+on-chain USDC flow would not.
+
+It is aimed at the corridors where the incumbent is cash: a worker abroad sending school money
+home to a family in a market where the school has no card terminal, the bank transfer takes days,
+and the counter charges by the percent. The World Bank's Remittance Prices Worldwide puts the
+global average cost of sending $200 at **6.49%** (Q1 2025), banks at **9.50%**, and Sub-Saharan
+Africa at **8.78%** — against a UN target of 3%.[^rpw] Those percentages are the spread this
+design lets a liquidity provider keep while removing the one thing that makes the corridor slow:
+nobody has to be believed about whether the deposit happened.
+
+Two honest constraints follow. The receiving school has to be registered — an onboarding step,
+but deliberately the thinnest one possible: one wallet address and a list of accepted purposes,
+no hardware, no integration. And the settlement currency on Creditcoin is whatever the liquidity
+provider pre-funds; the demo uses a test unit.
+
+[^rpw]: World Bank, *Remittance Prices Worldwide*, Q1–Q3 2025 — https://remittanceprices.worldbank.org/
+
 ## What Kirogi does
 
 The Attestcoin Protocol lets a Creditcoin contract read the Ethereum transaction itself.
@@ -309,6 +333,17 @@ Prior art exists: PayAngel has moved **$450M** paying schools and clinics direct
 blockchain at all. The claim here is not the idea. It is that the receiving side no longer has to
 trust anyone's word that the sending side paid.
 
+
+### What the proof rests on
+
+- **Attestation is the header relay.** Creditcoin's attestors follow *finalized* Ethereum blocks
+  and publish roughly every two minutes; a proof is only as good as that attestation set. Kirogi
+  adds nothing on top of it and inherits its trust assumptions.
+- **Reorgs are handled by waiting for finality.** A transaction that is reorganised out before
+  finality is never attested; if it lands elsewhere it is a different proof (height and index
+  differ) and the old one is worthless.
+- **Inclusion is not success.** The precompile proves the transaction is in the block. Whether it
+  succeeded, what it moved and to whom, is what the six checks decide.
 
 ### Refunds, and what happens to a deposit Creditcoin refuses
 
