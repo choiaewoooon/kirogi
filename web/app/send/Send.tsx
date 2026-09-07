@@ -177,6 +177,8 @@ export function Send() {
             : allowed === true ? <span style={{ color: "var(--pass)" }}>The school accepts this purpose. </span> : null}
           {balance !== undefined && address ? `Balance ${formatUnits(balance, 6)} USDC · ` : ""}
           Gateway <span className="mono">{gateway ? short(gateway) : "—"}</span> · approve is for the exact amount, never unlimited.
+          If Creditcoin refuses the settlement, the USDC stays in the treasury and is returned off-chain by the
+          liquidity provider — there is no on-chain refund in this version.
         </p>
       </form>
 

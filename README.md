@@ -309,6 +309,38 @@ Prior art exists: PayAngel has moved **$450M** paying schools and clinics direct
 blockchain at all. The claim here is not the idea. It is that the receiving side no longer has to
 trust anyone's word that the sending side paid.
 
+
+### Refunds, and what happens to a deposit Creditcoin refuses
+
+A refused settlement — wrong purpose, liquidity short, source transaction reverted — leaves the
+USDC exactly where the gateway put it: in the treasury. There is no on-chain refund path in this
+version. The liquidity provider returns it off-chain, the same way a corridor operator reverses a
+failed payout today. That is a trust assumption and it is stated here on purpose. A production
+version replaces the treasury with an escrow that the same proof can either settle or refund.
+
+One more edge: a proof settles **once per source transaction**. A contract wallet that calls
+`remit` twice in one transaction gets the first remittance settled and the second stranded in the
+treasury. The send page never does this; a hardening pass would make the contract refuse such
+receipts outright rather than settle half of them.
+
+### Security posture
+
+Audited 2026-09-07 with a threat model over the contracts, the site, the wallet layer and the
+repository. What holds: no secrets in the history (`gitleaks`), lockfiles tracked, no install
+scripts in dependencies, no HTML-injection sinks in the site, exact-amount `approve`, the vendored
+`ASCBase` byte-identical to upstream, replay blocked per `chainKey · height · txIndex`, gateway and
+treasury immutable and ownerless on both chains.
+
+What is accepted, and why:
+
+| Risk | Status |
+|---|---|
+| The owner key can withdraw pool liquidity, re-point a source, register partners | Testnet payout token only; the mainnet gateway has no owner. Production: multisig + timelock |
+| Public RPCs used by the site could misreport balances | Display only. Settlement is decided by the prover and the precompile, never by these RPCs |
+| Embedded-wallet sign-in is email/Google; MFA is a dashboard setting | Being enabled; required for anything beyond demo amounts |
+| `next` advisories in `npm audit` | Server-side only; the site is a static export with no Next server. Kept upgraded regardless |
+| Fonts and one CSS file load from Google and jsDelivr without SRI | CSS-only surface; self-hosting is the fix if this ships |
+
 ## Notes for anyone building on Attestcoin
 
 Things that cost us time and are not obvious from the docs:
