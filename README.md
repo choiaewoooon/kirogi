@@ -337,7 +337,7 @@ What is accepted, and why:
 |---|---|
 | The owner key can withdraw pool liquidity, re-point a source, register partners | Testnet payout token only; the mainnet gateway has no owner. Production: multisig + timelock |
 | Public RPCs used by the site could misreport balances | Display only. Settlement is decided by the prover and the precompile, never by these RPCs |
-| Embedded-wallet sign-in is email/Google; MFA is a dashboard setting | Being enabled; required for anything beyond demo amounts |
+| Embedded-wallet sign-in is email/Google | MFA (authenticator app or passkey) is required for transactions; SMS is off; allowed origins are the production domain only |
 | `next` advisories in `npm audit` | Server-side only; the site is a static export with no Next server. Kept upgraded regardless |
 | Fonts and one CSS file load from Google and jsDelivr without SRI | CSS-only surface; self-hosting is the fix if this ships |
 
