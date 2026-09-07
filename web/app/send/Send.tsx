@@ -4,7 +4,7 @@ import { useState } from "react";
 import { parseUnits, formatUnits, type Address, type Hex } from "viem";
 import {
   useAccount, useConnect, useDisconnect, useSwitchChain, useReadContract,
-  useWriteContract, usePublicClient,
+  useWriteContract, usePublicClient, useBalance,
 } from "wagmi";
 import { usePrivy, useFundWallet } from "@privy-io/react-auth";
 import { MyRemittances } from "./MyRemittances";
@@ -50,6 +50,7 @@ const GATEWAY = [
 ] as const;
 const POOL = [
   { type: "function", name: "purposeAllowed", stateMutability: "view", inputs: [{ type: "bytes32" }, { type: "uint16" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "settlementAddressOf", stateMutability: "view", inputs: [{ type: "bytes32" }], outputs: [{ type: "address" }] },
 ] as const;
 const PURPOSES = [
   { code: 1, label: "tuition" }, { code: 2, label: "dormitory" }, { code: 3, label: "books" }, { code: 4, label: "exam fee" },
@@ -84,9 +85,32 @@ export function Send() {
     address: D.settlement.pool as Address, abi: POOL, functionName: "purposeAllowed",
     args: [beneficiary, purpose], chainId: cc3.id,
   });
+  // Pre-flight on Creditcoin: everything the settlement will check, asked *before* any USDC leaves.
+  // The four ways money gets stranded in the treasury are all decidable here.
+  const { data: partner } = useReadContract({
+    address: D.settlement.pool as Address, abi: POOL, functionName: "settlementAddressOf",
+    args: [beneficiary], chainId: cc3.id,
+  });
+  const { data: liquidity } = useReadContract({
+    address: D.settlement.token as Address, abi: ERC20, functionName: "balanceOf",
+    args: [D.settlement.pool as Address], chainId: cc3.id,
+  });
+  const { data: native } = useBalance({ address, chainId: cfg.chainId, query: { enabled: Boolean(address) } });
 
   const wei = (() => { try { return parseUnits(amount || "0", 6); } catch { return 0n; } })();
-  const ready = Boolean(gateway) && isConnected && wei > 0n;
+  const ZERO = "0x0000000000000000000000000000000000000000";
+  // each blocker is a sentence the parent can act on; the first one wins
+  const blocker: string | null =
+    !gateway ? "This chain has no gateway yet." :
+    !isConnected ? null :
+    wei <= 0n ? "Enter an amount." :
+    partner !== undefined && partner === ZERO ? "This school is not registered on Creditcoin. Nothing would settle." :
+    allowed === false ? "The school does not accept this purpose. Creditcoin would refuse the settlement, so the deposit is blocked here." :
+    liquidity !== undefined && liquidity < wei ? `The settlement pool holds ${formatUnits(liquidity, 6)} KSU — less than this amount. It would be refused until liquidity is added.` :
+    native !== undefined && native.value === 0n ? `This wallet has no ${native.symbol} for gas on ${cfg.name}.` :
+    balance !== undefined && balance < wei ? `This wallet holds ${formatUnits(balance, 6)} USDC.` :
+    null;
+  const ready = Boolean(gateway) && isConnected && wei > 0n && blocker === null;
 
   async function go(e: React.FormEvent) {
     e.preventDefault();
@@ -170,15 +194,17 @@ export function Send() {
           </select>
           <button className="tracker__go" disabled={busy || !ready}>{busy ? "Signing…" : "Send from my wallet"}</button>
         </div>
+        {isConnected && blocker && (
+          <p className="tracker__label" style={{ marginTop: "0.8rem", color: "var(--fail)" }}>{blocker}</p>
+        )}
 
         <p className="tracker__label" style={{ marginTop: "0.8rem" }}>
-          {allowed === false
-            ? <span style={{ color: "var(--fail)" }}>The school does not accept this purpose. Ethereum will take the deposit; Creditcoin will refuse the settlement. </span>
-            : allowed === true ? <span style={{ color: "var(--pass)" }}>The school accepts this purpose. </span> : null}
+          {allowed === true && partner && partner !== ZERO
+            ? <span style={{ color: "var(--pass)" }}>The school is registered and accepts this purpose. </span> : null}
           {balance !== undefined && address ? `Balance ${formatUnits(balance, 6)} USDC · ` : ""}
           Gateway <span className="mono">{gateway ? short(gateway) : "—"}</span> · approve is for the exact amount, never unlimited.
-          If Creditcoin refuses the settlement, the USDC stays in the treasury and is returned off-chain by the
-          liquidity provider — there is no on-chain refund in this version.
+          A deposit cannot be cancelled once sent. If Creditcoin still refuses the settlement, the USDC stays in
+          the treasury and is returned off-chain by the liquidity provider — there is no on-chain refund in this version.
         </p>
       </form>
 
