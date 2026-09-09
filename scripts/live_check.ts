@@ -42,8 +42,11 @@ export function encodeExecute(action: number, p: Proof) {
   ]);
 }
 
+/** What eth_call said: settle, or the decoded revert (with its selector when we have one). */
+export type Verdict = { ok: boolean; reason: string; selector?: string };
+
 /** Describe what the chain said: "ok" or the decoded revert. */
-export function explain(err: unknown): { ok: false; reason: string; selector?: string } {
+export function explain(err: unknown): Verdict {
   const data: string | undefined = (err as { data?: string })?.data ?? (err as { info?: { error?: { data?: string } } })?.info?.error?.data;
   if (typeof data === "string" && data.startsWith("0x") && data.length >= 10) {
     try {
@@ -56,10 +59,10 @@ export function explain(err: unknown): { ok: false; reason: string; selector?: s
 }
 
 /** eth_call execute() against the live ASC. Returns ok:true or the decoded revert. */
-export async function dryRun(rpc: JsonRpcProvider, asc: string, from: string, action: number, p: Proof) {
+export async function dryRun(rpc: JsonRpcProvider, asc: string, from: string, action: number, p: Proof): Promise<Verdict> {
   try {
     await rpc.call({ to: asc, from, data: encodeExecute(action, p) });
-    return { ok: true as const, reason: "would settle" };
+    return { ok: true, reason: "would settle" };
   } catch (e) {
     return explain(e);
   }
