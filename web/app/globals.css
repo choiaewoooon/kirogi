@@ -332,6 +332,74 @@ button.btn { background: transparent; color: var(--text); font: inherit; cursor:
 .stage__name { margin: 0 0 0.25rem; font-size: 0.95rem; }
 .stage__detail { margin: 0; font-family: var(--mono); font-size: 0.78rem; color: var(--text-faint); }
 
+/* ---------- verdict: one card that says what the remittance is and what Creditcoin will do ---------- */
+.verdict {
+  margin-top: 2rem; padding: 1.4rem 1.5rem 0.4rem;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--tone) 7%, transparent), transparent 55%),
+    var(--ink-raised);
+  border: 1px solid var(--line); border-radius: 16px;
+}
+.verdict--pass { --tone: var(--pass); }
+.verdict--fail { --tone: var(--fail); }
+.verdict--wait { --tone: var(--settle); }
+
+.verdict__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.verdict__chain {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rail);
+}
+.verdict__amount {
+  margin: 1.2rem 0 1.1rem; padding: 1.5rem 1rem 1.3rem; text-align: center;
+  border: 1px dashed var(--line-bright); border-radius: 12px;
+}
+.verdict__figure {
+  margin: 0; font-family: var(--display); font-weight: 600; letter-spacing: -0.045em; line-height: 1;
+  font-size: clamp(2.6rem, 6vw, 4.2rem); font-variant-numeric: tabular-nums;
+}
+.verdict__figure span { font-size: 0.34em; color: var(--text-dim); margin-left: 0.45em; letter-spacing: -0.01em; vertical-align: 0.12em; }
+.verdict__figure--none { color: var(--text-faint); }
+.verdict__for { margin: 0.7rem 0 0; color: var(--text-dim); font-size: 0.9rem; }
+.verdict__for b { color: var(--text); font-weight: 500; }
+
+.verdict__pill {
+  margin: 0; display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
+  padding: 0.75rem 1rem; border-radius: 999px;
+  background: color-mix(in oklab, var(--tone) 14%, transparent);
+  border: 1px solid color-mix(in oklab, var(--tone) 35%, transparent);
+  color: var(--tone);
+}
+.verdict__pill-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.verdict--wait .verdict__pill-dot { animation: breathe 1.6s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+.verdict__pill-label { font-weight: 500; font-size: 0.95rem; }
+.verdict__pill-note { margin-left: auto; color: color-mix(in oklab, var(--tone) 75%, var(--text-dim)); font-size: 0.74rem; }
+
+.tracker__stages--in-card { margin-top: 0.9rem; }
+.tracker__stages--in-card .stage:first-child { border-top: 0; }
+
+/* ---------- send: the amount is the thing, so it gets the display face ---------- */
+.amount {
+  display: flex; align-items: center; gap: 0.6rem; flex: 1; min-width: 0;
+  padding: 0.35rem 0.6rem 0.35rem 1rem; border-radius: 12px;
+  background: var(--ink-raised); border: 1px solid var(--line-bright);
+}
+.amount:focus-within { border-color: var(--source); }
+.amount__input {
+  flex: 1; min-width: 0; width: 100%; background: transparent; border: 0; outline: none; color: var(--text);
+  font-family: var(--display); font-weight: 600; letter-spacing: -0.04em; font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  font-variant-numeric: tabular-nums; padding: 0.25rem 0;
+}
+.amount__unit {
+  flex: none; display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.4rem 0.7rem; border-radius: 999px; background: var(--surface); border: 1px solid var(--line-bright);
+  font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.06em; color: var(--text-dim);
+}
+.amount__unit .dot { background: var(--source); }
+.purposes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.9rem 0 1.1rem; }
+.purposes .btn { min-height: 38px; padding-inline: 0.95rem; font-size: 0.85rem; border-radius: 999px; }
+.purposes .btn--ghost.is-off { color: var(--text-faint); }
+.purposes .btn--ghost.is-off:hover { color: var(--text); }
+
 /* ---------- the flier ---------- */
 .flier {
   grid-column: 1 / -1;

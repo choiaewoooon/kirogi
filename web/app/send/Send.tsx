@@ -186,13 +186,28 @@ export function Send() {
           ))}
         </div>
 
-        <label className="tracker__label" htmlFor="amt">Amount (USDC) and what it is for</label>
+        <label className="tracker__label" htmlFor="amt">Amount</label>
         <div className="tracker__row">
-          <input id="amt" className="tracker__input mono" value={amount} onChange={(e) => setAmount(e.target.value)} inputMode="decimal" style={{ maxWidth: "10rem" }} />
-          <select className="tracker__input mono" value={purpose} onChange={(e) => setPurpose(Number(e.target.value))} style={{ maxWidth: "12rem" }}>
-            {PURPOSES.map((p) => <option key={p.code} value={p.code}>{p.code} · {p.label}</option>)}
-          </select>
-          <button className="tracker__go" disabled={busy || !ready}>{busy ? "Signing…" : "Send from my wallet"}</button>
+          <div className="amount">
+            <input id="amt" className="amount__input" value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
+              inputMode="decimal" autoComplete="off" spellCheck={false} placeholder="0.00" aria-label="Amount in USDC" />
+            <span className="amount__unit"><span className="dot" aria-hidden="true" />USDC · {cfg.name}</span>
+          </div>
+        </div>
+
+        <label className="tracker__label" style={{ marginTop: "1rem" }}>What it is for</label>
+        <div className="purposes" role="radiogroup" aria-label="Purpose">
+          {PURPOSES.map((p) => (
+            <button type="button" key={p.code} role="radio" aria-checked={purpose === p.code}
+              className={`btn ${purpose === p.code ? "btn--primary" : "btn--ghost is-off"}`}
+              onClick={() => setPurpose(p.code)}>
+              {p.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="tracker__row">
+          <button className="tracker__go" disabled={busy || !ready}>{busy ? "Signing…" : `Send ${wei > 0n ? amount : ""} USDC from my wallet`}</button>
         </div>
         {isConnected && blocker && (
           <p className="tracker__label" style={{ marginTop: "0.8rem", color: "var(--fail)" }}>{blocker}</p>
