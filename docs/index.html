@@ -1,77 +1,304 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kirogi — remittance that settles on proof</title>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="description" content="A remittance sent on Ethereum settles to a school on Creditcoin without a bridge, and without anyone being trusted to report the deposit.">
+<meta property="og:title" content="Kirogi — remittance that settles on proof">
+<meta property="og:image" content="https://choiaewoooon.github.io/kirogi/hero-geese-1400.jpg">
+<link rel="icon" href="app/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="hero-geese-1400.jpg" media="(max-width:900px)">
+<link rel="preload" as="image" href="hero-geese.jpg" media="(min-width:901px)">
 <style>
-:root{--ink:#08090c;--raised:#0d0f14;--line:#1d2029;--text:#f2f4f7;--dim:#9aa2b1;--faint:#626b7b;
---pass:#46cf95;--settle:#f0b36b;--source:#8fa6ff}
-*{box-sizing:border-box}body{margin:0;background:var(--ink);color:var(--text);
-font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-main{max-width:1040px;margin:0 auto;padding:72px 24px 96px}
-.mark{height:96px}h1{font-size:clamp(36px,6vw,64px);letter-spacing:-.035em;line-height:1.02;margin:24px 0 12px}
-.lede{font-size:20px;color:var(--dim);max-width:52ch;margin:0 0 44px;line-height:1.5}
-video{width:100%;border-radius:14px;border:1px solid var(--line);background:#000;display:block}
-.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:40px 0}
-.links a{display:block;padding:18px 20px;border:1px solid var(--line);border-radius:12px;
-background:var(--raised);color:var(--text);text-decoration:none}
-.links a small{display:block;color:var(--faint);font-family:"JetBrains Mono",monospace;font-size:12px;
-letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
-.links a:hover{border-color:#2a2e3a}
-h2{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
-font-family:"JetBrains Mono",monospace;font-weight:500;margin:48px 0 16px}
-table{width:100%;border-collapse:collapse;font-family:"JetBrains Mono",monospace;font-size:13px}
-td{padding:10px 0;border-top:1px solid var(--line);vertical-align:top}
-td:first-child{color:var(--dim);width:220px;font-family:Archivo,sans-serif;font-size:14px}
-td a{color:var(--source);text-decoration:none;word-break:break-all}
-.ok{color:var(--pass)}.no{color:#ff6b6b}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);
-border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:0 0 40px}
-.stats div{background:var(--raised);padding:20px 22px}
-.stats small{display:block;color:var(--faint);font-family:"JetBrains Mono",monospace;font-size:11px;
-letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
-.stats b{display:block;font-weight:600;font-size:34px;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
-.stats b span{font-size:15px;color:var(--dim);font-weight:500;letter-spacing:-.01em;margin-left:8px}
-.stats .r b{color:#ff6b6b}.stats .g b{color:var(--pass)}.stats .s b{color:var(--settle)}
-@media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
-footer{margin-top:64px;color:var(--faint);font-size:13px;font-family:"JetBrains Mono",monospace}
-</style></head><body><main>
-<img class="mark" src="kirogi-mark.png" alt="">
-<h1>The money never crossed.<br>The proof did.</h1>
-<p class="lede">A remittance proven on Ethereum, settled to a school on Creditcoin through the
-Attestcoin Protocol — a purpose-bound remittance: paid for what it was sent for, and nothing else. No bridge. Nobody trusted
-to say the money arrived. No hardware, no merchant integration: one registered wallet.</p>
+:root{
+  --sea:#0f1a26;        /* the water under the hero, and the dark band */
+  --mist:#e7eaee;       /* page surface below the sky */
+  --card:#ffffff;
+  --ink:#141d27;
+  --slate:#5a6878;
+  --rule:#d5dbe2;
+  --ember:#e0823a;      /* the sunset, used once or twice */
+  --pass:#26885f;
+  --refuse:#c2413a;
+  --r-lg:28px;--r-md:18px;--r-sm:12px;
+  --gutter:clamp(16px,4vw,48px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mist);color:var(--ink);font:400 17px/1.55 Geist,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;font-feature-settings:"ss01"}
+a{color:inherit}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--ember);outline-offset:3px;border-radius:6px}
+.mono{font-family:"Geist Mono",ui-monospace,monospace;font-size:.86em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--gutter)}
 
-<div class="stats" aria-label="What ran on public networks">
-  <div><small>Deposits</small><b>12<span>Sepolia + mainnet</span></b></div>
-  <div class="g"><small>Settled on Creditcoin</small><b>8<span>proven</span></b></div>
-  <div class="r"><small>Refused on-chain</small><b>5<span>by the contract</span></b></div>
-  <div class="s"><small>Ethereum mainnet</small><b>1<span>real USDC</span></b></div>
-</div>
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;color:#fff;
+  background:var(--sea);overflow:hidden;isolation:isolate}
+.hero__sky{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:60% 30%;
+  animation:settle 2.4s cubic-bezier(.2,.7,.2,1) both}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(15,26,38,.35) 0%,rgba(15,26,38,0) 22%,rgba(15,26,38,0) 45%,rgba(15,26,38,.78) 100%)}
+@keyframes settle{from{transform:scale(1.06);opacity:0}to{transform:none;opacity:1}}
 
-<video controls playsinline preload="metadata" src="Kirogi-demo.mp4"></video>
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px var(--gutter)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.01em}
+.brand img{height:34px;width:auto}
+.nav__pills{display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(255,255,255,.14);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nav__pills a{padding:8px 16px;border-radius:999px;text-decoration:none;font-size:14px;color:rgba(255,255,255,.86)}
+.nav__pills a:hover{color:#fff;background:rgba(255,255,255,.12)}
+.nav__pills a[aria-current]{background:#fff;color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;text-decoration:none;
+  font-size:15px;font-weight:500;background:#fff;color:var(--ink);white-space:nowrap}
+.pill:hover{background:#f1f3f5}
+.pill--dark{background:var(--ink);color:#fff}
+.pill--dark:hover{background:#26313d}
 
-<div class="links">
-  <a href="app/track/"><small>Live app</small>Paste a Sepolia hash, watch it become provable</a>
-  <a href="app/evidence/"><small>Live state</small>Balances and settlements, read from both chains</a>
-  <a href="Kirogi-deck.pdf"><small>Deck · PDF</small>13 slides, 0.8 MB</a>
-  <a href="deck/"><small>Deck · in browser</small>Same slides, rendered live</a>
-  <a href="https://github.com/choiaewoooon/kirogi"><small>Source</small>Contracts, tests, worker, site</a>
-  <a href="https://github.com/choiaewoooon/kirogi#readme"><small>Technical doc</small>How Attestcoin is used, and what it does not claim</a>
-</div>
+.hero__foot{margin-top:auto;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:40px;align-items:end;
+  padding:0 var(--gutter) clamp(36px,6vw,72px)}
+.hero h1{margin:0;font-weight:300;font-size:clamp(44px,7.4vw,108px);line-height:.98;letter-spacing:-.045em}
+.hero__lede{margin:0;max-width:40ch;font-size:16px;line-height:1.55;color:rgba(255,255,255,.84)}
+.hero__lede p{margin:0 0 22px}
+.hero__actions{display:flex;flex-wrap:wrap;gap:10px}
+.pill--glass{background:rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.pill--glass:hover{background:rgba(255,255,255,.22)}
 
-<h2>Every hash is public</h2>
-<table>
-<tr><td>Deposit on Sepolia</td><td><a href="https://eth-sepolia.blockscout.com/tx/0x0a31dd52776f8d656cc5be3178a367f8283584e2cd7396038880dfb0b2c02e2b">0x0a31dd52…c02e2b</a> — 12 USDC, <span class="ok">success</span></td></tr>
-<tr><td>Settlement on Creditcoin</td><td><a href="https://creditcoin-testnet.blockscout.com/tx/0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307">0x9c0857ec…550307</a> — 12 KSU to the school, <span class="ok">success</span></td></tr>
-<tr><td>Ethereum mainnet, real USDC</td><td><a href="https://eth.blockscout.com/tx/0x2d7142baee3a4111f426efa434c33192e112ed9f77c32069efa369d50837da04">0x2d7142ba…37da04</a> → <a href="https://creditcoin-testnet.blockscout.com/tx/0x9ed884596e1c04c8af1e7413f4449a313272f2b7b4e7413153ee292689276a47">0x9ed88459…276a47</a> — 1 USDC sent from an email-login embedded wallet, proven and settled (block 5,433,955)</td></tr>
-<tr><td>Exam fee, refused</td><td><a href="https://creditcoin-testnet.blockscout.com/tx/0xb03abeec480b820bf65f3d64b879d6089b94c0457b21e93ab575a1d42c9714e9">0xb03abeec…9714e9</a> — deposit succeeded, proof valid, school takes tuition · dormitory · books → <span class="no">PurposeNotAllowed()</span></td></tr>
-<tr><td>The batch</td><td>10 deposits → 6 settled, 4 refused on-chain; every outcome predicted by <code>eth_call</code> through the real precompile first — <a href="https://github.com/choiaewoooon/kirogi/blob/main/fixtures/batch-2026-09-02-settled.json">fixtures/batch-2026-09-02-settled.json</a></td></tr>
-<tr><td>A reverted deposit, refused</td><td><a href="https://eth-sepolia.blockscout.com/tx/0xb17c17de63ce94d14534aa610212f41f6fc6f54ec01f06fa3e976c67482606e0">0xb17c17de…2606e0</a> — proof valid, tx included, status 0 → <span class="no">SourceTransactionFailed()</span></td></tr>
-<tr><td>KirogiASC (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45">0x4Ea7D8d6…cFcD45</a></td></tr>
-<tr><td>SettlementPool v2 (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0xC471E417383C01c0053F79660224428Edd37e8e3">0xC471E417…37e8e3</a> — purpose enforcement, settlement count</td></tr>
-<tr><td>SettlementPool v1 (CC3)</td><td><a href="https://creditcoin-testnet.blockscout.com/address/0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98">0x3F6d4A40…2F2A98</a> — the first settlement; drained</td></tr>
-<tr><td>RemittanceGateway (Ethereum mainnet)</td><td><a href="https://eth.blockscout.com/address/0x53B98C348b9B2E8aDf43dFd07025Ed49de907f2E">0x53B98C34…907f2E</a> — verified; second source, chainKey 3</td></tr>
-<tr><td>RemittanceGateway (Sepolia)</td><td><a href="https://eth-sepolia.blockscout.com/address/0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053">0x1C2152e3…9Ab053</a></td></tr>
-</table>
-<footer>BUIDL CTC 2026 Fall · Attestcoin Protocol · Creditcoin CC3 testnet</footer>
-</main></body></html>
+/* ---------- sections ---------- */
+section{padding:clamp(72px,10vw,128px) 0}
+h2{margin:0 0 20px;font-weight:400;font-size:clamp(32px,4.4vw,56px);line-height:1.04;letter-spacing:-.035em;max-width:18ch}
+.intro{max-width:56ch;color:var(--slate);font-size:18px;margin:0 0 48px}
+
+/* ran on public networks */
+.tally{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--card);border-radius:var(--r-lg);overflow:hidden}
+.tally div{padding:28px 28px 30px}
+.tally div+div{border-left:1px solid var(--rule)}
+.tally b{display:block;font-weight:300;font-size:clamp(44px,5vw,64px);line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.tally span{display:block;margin-top:12px;color:var(--slate);font-size:15px;line-height:1.4}
+.tally .is-pass b{color:var(--pass)}.tally .is-refuse b{color:var(--refuse)}.tally .is-real b{color:var(--ember)}
+
+/* how a remittance moves */
+.moves{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:clamp(40px,7vw,96px);align-items:center}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:4px 16px;padding:22px 0;border-top:1px solid var(--rule)}
+.steps li:last-child{border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;background:var(--card);
+  display:grid;place-items:center;font-size:14px;font-weight:500}
+.steps strong{font-weight:500;font-size:19px;letter-spacing:-.01em}
+.steps p{margin:0;color:var(--slate);font-size:16px}
+
+.stack{position:relative;padding-top:52px}
+.receipt{background:var(--card);border-radius:var(--r-lg);padding:26px;box-shadow:0 30px 60px -30px rgba(20,29,39,.35)}
+.receipt--behind{position:absolute;top:0;left:22px;right:22px;padding:18px 22px;background:#f6f7f9;box-shadow:none;
+  border-radius:var(--r-md);display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:14px}
+.tag--refuse{background:#f8e3e1;color:var(--refuse);text-decoration:none}
+.trail__note{display:block;color:var(--slate);font-size:14px}
+.receipt__head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:22px}
+.receipt__head small{display:block;color:var(--slate);font-size:13px}
+.receipt__amt{font-size:34px;font-weight:400;letter-spacing:-.03em;line-height:1.1}
+.receipt__amt span{font-size:16px;color:var(--slate);margin-left:4px}
+.tag{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:500;background:#eef1f4}
+.tag--pass{background:#e2f2ea;color:var(--pass)}
+.trail{list-style:none;margin:0 0 22px;padding:0}
+.trail li{position:relative;padding:0 0 18px 30px}
+.trail li:last-child{padding-bottom:0}
+.trail li::before{content:"";position:absolute;left:0;top:4px;width:14px;height:14px;border-radius:50%;background:var(--pass);
+  box-shadow:0 0 0 4px #e2f2ea}
+.trail li:not(:last-child)::after{content:"";position:absolute;left:6px;top:22px;bottom:2px;width:2px;background:#cfe6da}
+.trail b{display:block;font-weight:500;font-size:15px}
+.trail a{color:var(--slate);text-decoration:none}
+.trail a:hover{color:var(--ink);text-decoration:underline}
+.receipt .pill{width:100%;justify-content:center}
+
+/* film */
+.film{background:var(--sea);color:#fff}
+.film h2{color:#fff}
+.film .intro{color:rgba(255,255,255,.7)}
+.film video{width:100%;border-radius:var(--r-lg);background:#000;display:block}
+
+/* go deeper */
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.doors a{display:flex;flex-direction:column;gap:6px;min-height:150px;padding:24px;border-radius:var(--r-md);
+  background:var(--card);text-decoration:none;transition:transform .2s ease}
+.doors a:hover{transform:translateY(-2px)}
+.doors b{font-weight:500;font-size:18px;letter-spacing:-.01em}
+.doors span{color:var(--slate);font-size:15px;margin-top:auto}
+
+/* ledger */
+.ledger{background:var(--card);border-radius:var(--r-lg);padding:8px 28px}
+.ledger div{display:grid;grid-template-columns:240px 1fr;gap:6px 24px;padding:16px 0;border-top:1px solid var(--rule)}
+.ledger div:first-child{border-top:0}
+.ledger dt{color:var(--slate);font-size:15px}
+.ledger dd{margin:0;font-size:15px;overflow-wrap:anywhere}
+.ledger a{color:var(--ink);text-underline-offset:3px;text-decoration-color:var(--rule)}
+.ledger a:hover{text-decoration-color:var(--ink)}
+.ledger dd > a.mono{margin-right:.6em}
+.ok{color:var(--pass)}.no{color:var(--refuse)}
+
+/* limits */
+.limits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.limits li{padding:22px 24px;border-radius:var(--r-md);border:1px solid var(--rule);color:var(--slate);font-size:15.5px}
+.limits strong{display:block;color:var(--ink);font-weight:500;font-size:16.5px;margin-bottom:4px}
+
+footer{padding:40px 0 56px;border-top:1px solid var(--rule);color:var(--slate);font-size:14px}
+
+/* ---------- small screens ---------- */
+@media (max-width:900px){
+  .nav__pills{display:none}
+  .hero__sky{object-position:62% 30%}
+  .hero__foot{grid-template-columns:1fr;gap:24px}
+  .tally{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tally div:nth-child(3){border-left:0}
+  .tally div:nth-child(n+3){border-top:1px solid var(--rule)}
+  .moves{grid-template-columns:1fr}
+  .doors{grid-template-columns:1fr 1fr}
+  .ledger div{grid-template-columns:1fr}
+  .limits{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .nav .pill{padding:9px 14px;font-size:14px}
+  .doors{grid-template-columns:1fr}
+  .doors a{min-height:0}
+  .tally div{padding:22px 20px}
+  .ledger{padding:4px 20px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero__sky{animation:none}
+  .doors a{transition:none}
+}
+</style></head><body>
+
+<header class="hero">
+  <picture>
+    <source media="(max-width:900px)" srcset="hero-geese-1400.jpg">
+    <img class="hero__sky" src="hero-geese.jpg" alt="Wild geese crossing a sunset sky over open sea, a city on one shore and a school on the other" width="2164" height="727">
+  </picture>
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="./"><img src="kirogi-mark.png" alt="" width="880" height="699">Kirogi</a>
+    <div class="nav__pills">
+      <a href="./" aria-current="page">Overview</a>
+      <a href="app/evidence/">Evidence</a>
+      <a href="app/track/">Track</a>
+      <a href="https://github.com/choiaewoooon/kirogi">Code</a>
+    </div>
+    <a class="pill" href="app/send/">Send a remittance</a>
+  </nav>
+  <div class="hero__foot">
+    <h1>The money never crossed.<br> The proof did.</h1>
+    <div class="hero__lede">
+      <p>A parent abroad pays tuition in USDC on Ethereum. Minutes later the school is paid on
+      Creditcoin, because a contract read the deposit itself instead of being told about it.
+      No bridge holds the money, and nobody has to be trusted to say it arrived.</p>
+      <div class="hero__actions">
+        <a class="pill" href="app/track/">Track a deposit</a>
+        <a class="pill pill--glass" href="#film">Watch the demo</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <h2>It ran on public networks.</h2>
+      <p class="intro">Every number below is a transaction you can open. Refusals count as much as
+      settlements: they show what the contract will not pay for.</p>
+      <div class="tally" aria-label="What ran on public networks">
+        <div><b>12</b><span>deposits sent on Sepolia and Ethereum mainnet</span></div>
+        <div class="is-pass"><b>8</b><span>proven and settled on Creditcoin</span></div>
+        <div class="is-refuse"><b>5</b><span>refused on-chain by the contract</span></div>
+        <div class="is-real"><b>1</b><span>paid with real USDC on mainnet</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap moves">
+      <div>
+        <h2>How a remittance reaches the school.</h2>
+        <ol class="steps">
+          <li><strong>The parent pays on Ethereum</strong><p>USDC goes to a gateway with a purpose attached: tuition, dormitory or books.</p></li>
+          <li><strong>Creditcoin reads the deposit</strong><p>Once Ethereum's block is attested, about seven minutes later, the Attestcoin Protocol proves the payment happened and succeeded.</p></li>
+          <li><strong>The school is paid locally</strong><p>A settlement pool on Creditcoin pays the registered school. A purpose the school does not accept is refused.</p></li>
+        </ol>
+      </div>
+      <div class="stack" aria-label="A real remittance from the test batch">
+        <div class="receipt--behind">
+          <span>Exam fee, 1 USDC</span>
+          <a class="tag tag--refuse" href="https://creditcoin-testnet.blockscout.com/tx/0xb03abeec480b820bf65f3d64b879d6089b94c0457b21e93ab575a1d42c9714e9" title="The school takes tuition, dormitory and books only">Refused</a>
+        </div>
+        <article class="receipt">
+          <div class="receipt__head">
+            <div><small>Tuition to a registered school</small><div class="receipt__amt">1.00<span>USDC</span></div></div>
+            <span class="tag tag--pass">Settled</span>
+          </div>
+          <ol class="trail">
+            <li><b>Paid on Ethereum Sepolia</b><a class="mono" href="https://eth-sepolia.blockscout.com/tx/0xa40711ceb30249e82e0aec05bc0a378dcd35001c2d828255a38616e15e4a4256">0xa40711ce…4a4256</a></li>
+            <li><b>Proven by Attestcoin</b><span class="trail__note">Included, succeeded, real USDC, right treasury, never used before</span></li>
+            <li><b>1.000000 KSU paid on Creditcoin</b><a class="mono" href="https://creditcoin-testnet.blockscout.com/tx/0xe58565d23fc3a0a4842b11ad868ec8387458c9ad941768fccbd01de5c3b84488">0xe58565d2…b84488</a></li>
+          </ol>
+          <a class="pill pill--dark" href="app/track/">Track your own deposit</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="film" id="film">
+    <div class="wrap">
+      <h2>Three minutes, real transactions.</h2>
+      <p class="intro">Recorded against the live contracts on Sepolia and Creditcoin testnet.</p>
+      <video controls playsinline preload="metadata" poster="hero-geese-1400.jpg" src="Kirogi-demo.mp4"></video>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Go deeper.</h2>
+      <p class="intro">The app reads both chains in your browser. The code and the proofs are public.</p>
+      <div class="doors">
+        <a href="app/track/"><b>Track a deposit</b><span>Paste a Sepolia hash and watch it become provable</span></a>
+        <a href="app/evidence/"><b>Live state</b><span>Balances and settlements, read from both chains</span></a>
+        <a href="app/send/"><b>Send a remittance</b><span>Sign in with email or a wallet and pay a school</span></a>
+        <a href="Kirogi-deck.pdf"><b>Deck (PDF)</b><span>13 slides, 0.8 MB</span></a>
+        <a href="https://github.com/choiaewoooon/kirogi"><b>Source</b><span>Contracts, tests, worker and site</span></a>
+        <a href="https://github.com/choiaewoooon/kirogi#readme"><b>Technical doc</b><span>How Attestcoin is used, and what it does not claim</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <h2>Every hash is public.</h2>
+      <dl class="ledger">
+        <div><dt>Deposit on Sepolia</dt><dd><a class="mono" href="https://eth-sepolia.blockscout.com/tx/0x0a31dd52776f8d656cc5be3178a367f8283584e2cd7396038880dfb0b2c02e2b">0x0a31dd52…c02e2b</a> 12 USDC, <span class="ok">success</span></dd></div>
+        <div><dt>Settlement on Creditcoin</dt><dd><a class="mono" href="https://creditcoin-testnet.blockscout.com/tx/0x9c0857ec8a7e37bcc6e8c01221153101d4e753850191fd376b4b8c0ede550307">0x9c0857ec…550307</a> 12 KSU to the school, <span class="ok">success</span></dd></div>
+        <div><dt>Ethereum mainnet, real USDC</dt><dd><a class="mono" href="https://eth.blockscout.com/tx/0x2d7142baee3a4111f426efa434c33192e112ed9f77c32069efa369d50837da04">0x2d7142ba…37da04</a> then <a class="mono" href="https://creditcoin-testnet.blockscout.com/tx/0x9ed884596e1c04c8af1e7413f4449a313272f2b7b4e7413153ee292689276a47">0x9ed88459…276a47</a>. 1 USDC sent from an email-login wallet, proven and settled in block 5,433,955</dd></div>
+        <div><dt>Exam fee, refused</dt><dd><a class="mono" href="https://creditcoin-testnet.blockscout.com/tx/0xb03abeec480b820bf65f3d64b879d6089b94c0457b21e93ab575a1d42c9714e9">0xb03abeec…9714e9</a> The deposit succeeded and the proof was valid, but the school takes tuition, dormitory and books only: <span class="no mono">PurposeNotAllowed()</span></dd></div>
+        <div><dt>The batch</dt><dd>10 deposits: 6 settled, 4 refused on-chain. Every outcome was predicted by <code class="mono">eth_call</code> through the real precompile first. <a class="mono" href="https://github.com/choiaewoooon/kirogi/blob/main/fixtures/batch-2026-09-02-settled.json">batch-2026-09-02-settled.json</a></dd></div>
+        <div><dt>A reverted deposit, refused</dt><dd><a class="mono" href="https://eth-sepolia.blockscout.com/tx/0xb17c17de63ce94d14534aa610212f41f6fc6f54ec01f06fa3e976c67482606e0">0xb17c17de…2606e0</a> The proof was valid and the transaction included, but its status was 0: <span class="no mono">SourceTransactionFailed()</span></dd></div>
+        <div><dt>KirogiASC on Creditcoin</dt><dd><a class="mono" href="https://creditcoin-testnet.blockscout.com/address/0x4Ea7D8d61BC3e0b3fe28496e2eeD7506C3cFcD45">0x4Ea7D8d6…cFcD45</a></dd></div>
+        <div><dt>SettlementPool v2 on Creditcoin</dt><dd><a class="mono" href="https://creditcoin-testnet.blockscout.com/address/0xC471E417383C01c0053F79660224428Edd37e8e3">0xC471E417…37e8e3</a> Purpose enforcement and settlement count</dd></div>
+        <div><dt>SettlementPool v1 on Creditcoin</dt><dd><a class="mono" href="https://creditcoin-testnet.blockscout.com/address/0x3F6d4A4072b3Ba6871e4E11F58415254A82F2A98">0x3F6d4A40…2F2A98</a> The first settlement, now drained</dd></div>
+        <div><dt>RemittanceGateway on mainnet</dt><dd><a class="mono" href="https://eth.blockscout.com/address/0x53B98C348b9B2E8aDf43dFd07025Ed49de907f2E">0x53B98C34…907f2E</a> Verified, second source, chainKey 3</dd></div>
+        <div><dt>RemittanceGateway on Sepolia</dt><dd><a class="mono" href="https://eth-sepolia.blockscout.com/address/0x1C2152e3fAbC8Ba1314F60d25Bb6f306Ef9Ab053">0x1C2152e3…9Ab053</a></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <h2>What the proof does not cover.</h2>
+      <p class="intro">Attestcoin proves that a payment happened. Some of the story sits outside that.</p>
+      <ul class="limits">
+        <li><strong>Purpose is self-reported</strong>The gateway records what the sender says the money is for. The proof shows the transfer happened, not that the label is true.</li>
+        <li><strong>Identity is off-chain</strong>Nothing on-chain ties a beneficiary to a real person, so a sender and a recipient could be the same someone.</li>
+        <li><strong>Schools are approved by an operator</strong>That is a trusted role. Limiting payouts to registered addresses limits transfers, not collusion.</li>
+        <li><strong>Only Ethereum is readable today</strong>Attestcoin attests Ethereum and Sepolia and nothing else yet. Another chain is a registry entry, not a rewrite.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">Testnet only. Built for BUIDL CTC 2026 Fall on the Attestcoin Protocol, Creditcoin CC3.</div></footer>
+</body></html>
